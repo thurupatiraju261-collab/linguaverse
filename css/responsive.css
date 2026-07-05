@@ -1,0 +1,94 @@
+/* ==========================================================================
+   LinguaVerse — Responsive Stylesheet
+   Breakpoints: 1024px (tablet), 768px (large mobile), 480px (small mobile)
+   ========================================================================== */
+
+/* ---------------------------------------------------------------------- */
+/* TABLET — 1024px and below                                               */
+/* ---------------------------------------------------------------------- */
+@media (max-width: 1024px) {
+  :root { --space-2xl: 4.5rem; --space-xl: 3rem; }
+
+  .lang-grid { grid-template-columns: repeat(2, 1fr); }
+  .stats-grid { grid-template-columns: repeat(3, 1fr); row-gap: var(--space-lg); }
+  .pricing-grid { grid-template-columns: repeat(1, 1fr); max-width: 460px; margin: 0 auto; }
+  .price-card.featured { transform: scale(1); order: -1; }
+  .price-card.featured:hover { transform: translateY(-8px); }
+  .mission-vision-grid { grid-template-columns: 1fr; }
+  .values-grid { grid-template-columns: repeat(2, 1fr); }
+  .footer-grid { grid-template-columns: repeat(3, 1fr); }
+  .contact-grid { grid-template-columns: 1fr; }
+  .four-col { grid-template-columns: repeat(2, 1fr); }
+  .three-col { grid-template-columns: repeat(2, 1fr); }
+
+  .hero .container { grid-template-columns: 1fr; text-align: center; }
+  .hero-content .hero-cta, .hero-content .hero-rating, .hero-content .hero-trust { justify-content: center; }
+  .hero-content > p.lead { margin-left: auto; margin-right: auto; }
+  .hero-visual { order: -1; margin-bottom: var(--space-md); max-width: 380px; margin-inline: auto; }
+}
+
+/* ---------------------------------------------------------------------- */
+/* LARGE MOBILE — 768px and below                                         */
+/* ---------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  .nav-menu {
+    position: fixed;
+    top: 0; right: -100%;
+    width: min(320px, 82vw);
+    height: 100vh;
+    background: var(--surface);
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 100px var(--space-md) var(--space-md);
+    box-shadow: var(--shadow-lg);
+    transition: right var(--transition-med);
+    z-index: 999;
+    gap: var(--space-lg);
+  }
+  .nav-menu.open { right: 0; }
+  .nav-links { flex-direction: column; align-items: flex-start; gap: var(--space-md); width: 100%; }
+  .nav-actions { width: 100%; justify-content: flex-start; }
+  .hamburger { display: flex; }
+
+  .nav-overlay {
+    position: fixed; inset: 0; background: rgba(15, 15, 26, 0.5);
+    z-index: 998; opacity: 0; visibility: hidden; transition: all var(--transition-fast);
+  }
+  .nav-overlay.open { opacity: 1; visibility: visible; }
+
+  .lang-grid, .values-grid, .footer-grid, .four-col, .three-col, .two-col, .number-grid { grid-template-columns: repeat(2, 1fr); }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .footer-grid { grid-template-columns: repeat(2, 1fr); }
+  .footer-brand { grid-column: 1 / -1; }
+
+  .details-nav { top: 0; overflow-x: auto; flex-wrap: nowrap; }
+  .details-nav::-webkit-scrollbar { display: none; }
+
+  .level-tabs { flex-direction: column; }
+}
+
+/* ---------------------------------------------------------------------- */
+/* SMALL MOBILE — 480px and below                                          */
+/* ---------------------------------------------------------------------- */
+@media (max-width: 480px) {
+  .container { padding: 0 var(--space-sm); }
+  .section { padding: var(--space-xl) 0; }
+
+  .lang-grid, .values-grid, .footer-grid, .four-col, .three-col, .two-col, .number-grid, .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero { padding: 130px 0 var(--space-xl); }
+  .hero-cta { flex-direction: column; align-items: stretch; }
+  .hero-cta .btn { width: 100%; }
+  .hero-badges { justify-content: center; }
+
+  .price-card.featured { transform: none; }
+
+  .newsletter-form { flex-direction: column; }
+  .newsletter-form button { width: 100%; border-radius: var(--radius-full); }
+
+  .footer-bottom { flex-direction: column; text-align: center; }
+
+  .lang-card p.desc { min-height: 0; }
+}

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Languages — LinguaVerse</title>
+  <meta name="description"
+    content="Browse all languages available on LinguaVerse: English, Hindi, Spanish, French, Japanese and Telugu." />
+
+  <link rel="icon" type="image/svg+xml" href="images/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+  <script src="js/theme.js"></script>
+</head>
+
+<body>
+
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <div class="page-loader" aria-hidden="true">
+    <img src="images/logo.svg" alt="" class="loader-mark" />
+  </div>
+
+  <header class="navbar">
+    <div class="container">
+      <a href="index.html" class="nav-brand">
+        <img src="images/logo.svg" alt="LinguaVerse logo" />
+        <span>LinguaVerse</span>
+      </a>
+
+      <nav class="nav-menu" aria-label="Primary">
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="languages.html" class="active">Languages</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+
+        <div class="nav-actions">
+          <div class="lang-select">
+            <button class="lang-select-btn" aria-haspopup="true" aria-expanded="false">
+              <i class="fa-solid fa-globe"></i> Explore <i class="fa-solid fa-chevron-down"
+                style="font-size:0.7rem;"></i>
+            </button>
+            <div class="lang-select-menu" role="menu">
+              <button data-lang-id="english" role="menuitem">🇬🇧 English</button>
+              <button data-lang-id="hindi" role="menuitem">🇮🇳 Hindi</button>
+              <button data-lang-id="spanish" role="menuitem">🇪🇸 Spanish</button>
+              <button data-lang-id="french" role="menuitem">🇫🇷 French</button>
+              <button data-lang-id="japanese" role="menuitem">🇯🇵 Japanese</button>
+              <button data-lang-id="telugu" role="menuitem">🇮🇳 Telugu</button>
+            </div>
+          </div>
+
+          <button class="theme-toggle" aria-label="Toggle dark mode">
+            <i class="fa-solid fa-moon"></i>
+            <i class="fa-solid fa-sun"></i>
+          </button>
+        </div>
+      </nav>
+
+      <button class="hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+  <div class="nav-overlay"></div>
+
+  <main id="main">
+    <section class="page-banner">
+      <div class="container">
+        <h1>Explore Every Language</h1>
+        <p>Six carefully crafted courses, each with its own roadmap, culture and community. Pick one — or start them
+          all.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="chip-list reveal" id="difficultyFilter"
+          style="justify-content:center;margin-bottom:var(--space-xl);">
+          <button class="chip active" data-filter="all" style="cursor:pointer;">All Languages</button>
+          <button class="chip" data-filter="Easy" style="cursor:pointer;">Easy</button>
+          <button class="chip" data-filter="Medium" style="cursor:pointer;">Medium</button>
+          <button class="chip" data-filter="Hard" style="cursor:pointer;">Hard</button>
+        </div>
+
+        <div class="grid lang-grid" id="allLanguages">
+          <!-- Cards rendered dynamically by js/script.js from js/languages-data.js -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" id="footer-include"></footer>
+  <button class="back-to-top" aria-label="Back to top"><i class="fa-solid fa-arrow-up"></i></button>
+
+  <script src="js/languages-data.js"></script>
+  <script src="js/script.js"></script>
+  <script src="js/footer.js"></script>
+</body>
+
+</html>

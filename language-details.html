@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Language Details — LinguaVerse</title>
+  <meta name="description"
+    content="Complete language guide: history, alphabet, greetings, phrases, grammar, roadmap and more." />
+
+  <link rel="icon" type="image/svg+xml" href="images/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+  <script src="js/theme.js"></script>
+</head>
+
+<body>
+
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <div class="page-loader" aria-hidden="true">
+    <img src="images/logo.svg" alt="" class="loader-mark" />
+  </div>
+
+  <header class="navbar">
+    <div class="container">
+      <a href="index.html" class="nav-brand">
+        <img src="images/logo.svg" alt="LinguaVerse logo" />
+        <span>LinguaVerse</span>
+      </a>
+
+      <nav class="nav-menu" aria-label="Primary">
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="languages.html" class="active">Languages</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+
+        <div class="nav-actions">
+          <div class="lang-select">
+            <button class="lang-select-btn" aria-haspopup="true" aria-expanded="false">
+              <i class="fa-solid fa-globe"></i> Explore <i class="fa-solid fa-chevron-down"
+                style="font-size:0.7rem;"></i>
+            </button>
+            <div class="lang-select-menu" role="menu">
+              <button data-lang-id="english" role="menuitem">🇬🇧 English</button>
+              <button data-lang-id="hindi" role="menuitem">🇮🇳 Hindi</button>
+              <button data-lang-id="spanish" role="menuitem">🇪🇸 Spanish</button>
+              <button data-lang-id="french" role="menuitem">🇫🇷 French</button>
+              <button data-lang-id="japanese" role="menuitem">🇯🇵 Japanese</button>
+              <button data-lang-id="telugu" role="menuitem">🇮🇳 Telugu</button>
+            </div>
+          </div>
+
+          <button class="theme-toggle" aria-label="Toggle dark mode">
+            <i class="fa-solid fa-moon"></i>
+            <i class="fa-solid fa-sun"></i>
+          </button>
+        </div>
+      </nav>
+
+      <button class="hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+  <div class="nav-overlay"></div>
+
+  <main id="main">
+    <!-- Banner content is injected by js/script.js (renderLanguageDetails) -->
+    <section class="details-banner" id="detailsBanner"></section>
+
+    <div class="container">
+      <nav class="details-nav" aria-label="Section navigation">
+        <a href="#historyBlock">History</a>
+        <a href="#alphabetBlock">Alphabet</a>
+        <a href="#greetingsBlock">Greetings</a>
+        <a href="#phrasesBlock">Phrases &amp; Vocabulary</a>
+        <a href="#grammarBlock">Grammar &amp; Levels</a>
+        <a href="#roadmapBlock">Roadmap &amp; Tips</a>
+        <a href="#factsBlock">Facts &amp; Resources</a>
+      </nav>
+    </div>
+
+    <div class="container" id="languageDetails">
+      <section class="details-block reveal" id="historyBlock"></section>
+      <section class="details-block reveal" id="alphabetBlock"></section>
+      <section class="details-block reveal" id="greetingsBlock"></section>
+      <section class="details-block reveal" id="phrasesBlock"></section>
+      <section class="details-block reveal" id="grammarBlock"></section>
+      <section class="details-block reveal" id="roadmapBlock"></section>
+      <section class="details-block reveal" id="factsBlock"></section>
+    </div>
+  </main>
+
+  <footer class="site-footer" id="footer-include"></footer>
+  <button class="back-to-top" aria-label="Back to top"><i class="fa-solid fa-arrow-up"></i></button>
+
+  <script src="js/languages-data.js"></script>
+  <script src="js/script.js"></script>
+  <script src="js/footer.js"></script>
+</body>
+
+</html>

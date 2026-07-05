@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LinguaVerse — Learn Languages the Human Way</title>
+  <meta name="description"
+    content="LinguaVerse is a premium language-learning platform for English, Hindi, Spanish, French, Japanese and Telugu — bite-sized lessons, real conversations, real progress." />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="images/favicon.svg" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+
+  <!-- Theme script loads early to prevent a flash of the wrong theme -->
+  <script src="js/theme.js"></script>
+</head>
+
+<body>
+
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <!-- Page loader -->
+  <div class="page-loader" aria-hidden="true">
+    <img src="images/logo.svg" alt="" class="loader-mark" />
+  </div>
+
+  <!-- ===================== NAVBAR ===================== -->
+  <header class="navbar">
+    <div class="container">
+      <a href="index.html" class="nav-brand">
+        <img src="images/logo.svg" alt="LinguaVerse logo" />
+        <span>LinguaVerse</span>
+      </a>
+
+      <nav class="nav-menu" aria-label="Primary">
+        <ul class="nav-links">
+          <li><a href="index.html" class="active">Home</a></li>
+          <li><a href="languages.html">Languages</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+
+        <div class="nav-actions">
+          <div class="lang-select">
+            <button class="lang-select-btn" aria-haspopup="true" aria-expanded="false">
+              <i class="fa-solid fa-globe"></i> Explore <i class="fa-solid fa-chevron-down"
+                style="font-size:0.7rem;"></i>
+            </button>
+            <div class="lang-select-menu" role="menu">
+              <button data-lang-id="english" role="menuitem">🇬🇧 English</button>
+              <button data-lang-id="hindi" role="menuitem">🇮🇳 Hindi</button>
+              <button data-lang-id="spanish" role="menuitem">🇪🇸 Spanish</button>
+              <button data-lang-id="french" role="menuitem">🇫🇷 French</button>
+              <button data-lang-id="japanese" role="menuitem">🇯🇵 Japanese</button>
+              <button data-lang-id="telugu" role="menuitem">🇮🇳 Telugu</button>
+            </div>
+          </div>
+
+          <button class="theme-toggle" aria-label="Toggle dark mode">
+            <i class="fa-solid fa-moon"></i>
+            <i class="fa-solid fa-sun"></i>
+          </button>
+        </div>
+      </nav>
+
+      <button class="hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+  <div class="nav-overlay"></div>
+
+  <main id="main">
+
+    <!-- ===================== HERO ===================== -->
+    <section class="hero" id="hero">
+      <div class="hero-shapes" aria-hidden="true">
+        <div class="hero-shape s1"></div>
+        <div class="hero-shape s2"></div>
+        <div class="hero-shape s3"></div>
+      </div>
+
+      <div class="container">
+        <div class="hero-content">
+          <div class="hero-rating">
+            <span class="stars">★★★★★</span>
+            <span>4.9/5 average learner rating</span>
+          </div>
+
+          <h1>Speak a new language, <span class="text-gradient">the human way.</span></h1>
+          <p class="lead">LinguaVerse turns real conversations, stories and culture into bite-sized daily lessons — so
+            you actually remember what you learn, not just memorize it.</p>
+
+          <div class="hero-cta">
+            <a href="languages.html" class="btn btn-primary">Start Learning <i class="fa-solid fa-arrow-right"></i></a>
+            <a href="#languages" class="btn btn-secondary">Explore Languages</a>
+          </div>
+
+          <div class="hero-trust">
+            <div class="avatars" aria-hidden="true">
+              <span style="background:var(--color-primary);">A</span>
+              <span style="background:var(--color-secondary);">R</span>
+              <span style="background:var(--color-accent);">S</span>
+              <span style="background:var(--color-coral);">M</span>
+            </div>
+            <p>Trusted by 25,000+ learners worldwide</p>
+          </div>
+
+          <div class="hero-badges">
+            <span class="badge"><i class="fa-solid fa-medal"></i> Top Rated 2026</span>
+            <span class="badge"><i class="fa-solid fa-certificate"></i> Certified Lessons</span>
+            <span class="badge"><i class="fa-solid fa-shield-heart"></i> Learn at Your Pace</span>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="hero-bubble glass b1" style="color:var(--color-primary);">Hola 👋</div>
+          <div class="hero-bubble glass b2" style="color:var(--color-secondary);">こんにちは</div>
+          <div class="hero-bubble glass b3" style="color:var(--color-accent);">నమస్కారం</div>
+          <svg class="hero-illustration" viewBox="0 0 420 400" xmlns="http://www.w3.org/2000/svg" role="img"
+            aria-label="Illustration of people learning languages together">
+            <defs>
+              <linearGradient id="heroG1" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#4F46E5" />
+                <stop offset="100%" stop-color="#7C6CF6" />
+              </linearGradient>
+              <linearGradient id="heroG2" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#14B8A6" />
+                <stop offset="100%" stop-color="#2DD4BF" />
+              </linearGradient>
+            </defs>
+            <circle cx="210" cy="200" r="170" fill="url(#heroG1)" opacity="0.08" />
+            <!-- open book -->
+            <path d="M70 250 Q 210 220 350 250 L 350 270 Q 210 240 70 270 Z" fill="url(#heroG1)" />
+            <path d="M70 250 Q 140 230 210 240 L 210 260 Q 140 250 70 270 Z" fill="#ffffff" opacity="0.25" />
+            <!-- person 1 -->
+            <circle cx="140" cy="150" r="34" fill="#FDD9B5" />
+            <path d="M100 230 Q 140 180 180 230 L 180 250 L 100 250 Z" fill="url(#heroG1)" />
+            <!-- person 2 -->
+            <circle cx="270" cy="140" r="30" fill="#E8B598" />
+            <path d="M235 220 Q 270 175 305 220 L 305 245 L 235 245 Z" fill="url(#heroG2)" />
+            <!-- floating speech shapes -->
+            <circle cx="330" cy="90" r="8" fill="var(--color-accent)" />
+            <circle cx="60" cy="110" r="6" fill="var(--color-coral)" />
+            <circle cx="200" cy="60" r="5" fill="url(#heroG2)" />
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== LANGUAGES ===================== -->
+    <section class="section" id="languages">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="eyebrow">Choose your language</span>
+          <h2>Six languages, one learning journey</h2>
+          <p>Every course is built from scratch with native speakers, real dialogues and a structured roadmap from zero
+            to conversational.</p>
+        </div>
+
+        <div class="grid lang-grid" id="featuredLanguages">
+          <!-- Cards are rendered dynamically by js/script.js from js/languages-data.js -->
+        </div>
+
+        <div style="text-align:center;margin-top:var(--space-lg);">
+          <a href="languages.html" class="btn btn-secondary reveal">View All Languages <i
+              class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== TRUST / STATS ===================== -->
+    <section class="section trust-section" id="trust">
+      <div class="container">
+        <div class="grid stats-grid">
+          <div class="stat-card reveal">
+            <div class="stat-icon"><i class="fa-solid fa-user-graduate"></i></div>
+            <div class="stat-number" data-counter="10000" data-suffix="+">0</div>
+            <div class="stat-label">Active Learners</div>
+          </div>
+          <div class="stat-card reveal">
+            <div class="stat-icon"><i class="fa-solid fa-layer-group"></i></div>
+            <div class="stat-number" data-counter="50" data-suffix="+">0</div>
+            <div class="stat-label">Topics Covered</div>
+          </div>
+          <div class="stat-card reveal">
+            <div class="stat-icon"><i class="fa-solid fa-language"></i></div>
+            <div class="stat-number" data-counter="6">0</div>
+            <div class="stat-label">Languages</div>
+          </div>
+          <div class="stat-card reveal">
+            <div class="stat-icon"><i class="fa-solid fa-star"></i></div>
+            <div class="stat-number" data-counter="4.9">0</div>
+            <div class="stat-label">Average Rating</div>
+          </div>
+          <div class="stat-card reveal">
+            <div class="stat-icon"><i class="fa-solid fa-gamepad"></i></div>
+            <div class="stat-number" data-counter="300" data-suffix="+">0</div>
+            <div class="stat-label">Interactive Lessons</div>
+          </div>
+          <div class="stat-card reveal">
+            <div class="stat-icon"><i class="fa-solid fa-mobile-screen"></i></div>
+            <div class="stat-number" data-counter="100" data-suffix="%">0</div>
+            <div class="stat-label">Responsive Learning</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== PRICING ===================== -->
+    <section class="section" id="pricing">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="eyebrow">Pricing</span>
+          <h2>Simple plans for every learner</h2>
+          <p>Start for free, upgrade when you're ready to go further. No hidden fees, cancel any time.</p>
+        </div>
+
+        <div class="grid pricing-grid">
+          <div class="price-card reveal">
+            <h3>Starter</h3>
+            <p>Perfect for trying LinguaVerse out.</p>
+            <div class="price">$0 <span>/ forever</span></div>
+            <ul>
+              <li><i class="fa-solid fa-circle-check"></i> Access to 1 language</li>
+              <li><i class="fa-solid fa-circle-check"></i> 20 core lessons</li>
+              <li><i class="fa-solid fa-circle-check"></i> Basic vocabulary trainer</li>
+              <li><i class="fa-solid fa-circle-check"></i> Community support</li>
+            </ul>
+            <a href="contact.html" class="btn btn-secondary btn-block">Get Started</a>
+          </div>
+
+          <div class="price-card featured reveal">
+            <span class="ribbon">Most Popular</span>
+            <h3>Pro</h3>
+            <p>Everything you need to become fluent.</p>
+            <div class="price">$12 <span>/ month</span></div>
+            <ul>
+              <li><i class="fa-solid fa-circle-check"></i> All 6 languages, unlimited</li>
+              <li><i class="fa-solid fa-circle-check"></i> Full lesson & phrase library</li>
+              <li><i class="fa-solid fa-circle-check"></i> Progress tracking & roadmaps</li>
+              <li><i class="fa-solid fa-circle-check"></i> Offline mode</li>
+              <li><i class="fa-solid fa-circle-check"></i> Priority support</li>
+            </ul>
+            <a href="contact.html" class="btn btn-accent btn-block">Start Pro Trial</a>
+          </div>
+
+          <div class="price-card reveal">
+            <h3>Lifetime</h3>
+            <p>Pay once, learn for life.</p>
+            <div class="price">$199 <span>/ one-time</span></div>
+            <ul>
+              <li><i class="fa-solid fa-circle-check"></i> Everything in Pro</li>
+              <li><i class="fa-solid fa-circle-check"></i> Lifetime updates & new languages</li>
+              <li><i class="fa-solid fa-circle-check"></i> Downloadable certificates</li>
+              <li><i class="fa-solid fa-circle-check"></i> 1:1 onboarding session</li>
+            </ul>
+            <a href="contact.html" class="btn btn-secondary btn-block">Get Lifetime Access</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="site-footer" id="footer-include"></footer>
+
+  <button class="back-to-top" aria-label="Back to top"><i class="fa-solid fa-arrow-up"></i></button>
+
+  <!-- Scripts -->
+  <script src="js/languages-data.js"></script>
+  <script src="js/script.js"></script>
+  <script src="js/footer.js"></script>
+</body>
+
+</html>
