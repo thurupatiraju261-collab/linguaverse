@@ -223,14 +223,12 @@ function initContactForm() {
   const status = form.querySelector(".form-status");
 
   form.addEventListener("submit", (e) => {
-    e.preventDefault();
     if (!form.checkValidity()) {
+      e.preventDefault();
       form.reportValidity();
       return;
     }
-    status.textContent = "Thanks! Your message has been sent — we'll reply within 24 hours.";
-    status.classList.add("success");
-    form.reset();
+    // Form is valid, let it submit to Web3Forms
   });
 }
 
