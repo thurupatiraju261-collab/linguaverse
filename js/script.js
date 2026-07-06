@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initScrollReveal();
   initAnimatedCounters();
   initBackToTop();
+  initScrollProgress();
   initFAQAccordion();
   initContactForm();
   initNewsletterForm();
@@ -195,6 +196,24 @@ function initBackToTop() {
   );
 
   btn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+}
+
+/* ---------------------------------------------------------------------- */
+/* Scroll progress bar                                                     */
+/* ---------------------------------------------------------------------- */
+function initScrollProgress() {
+  const bar = document.querySelector(".scroll-progress__bar");
+  if (!bar) return;
+
+  const updateProgress = () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    bar.style.width = progress + "%";
+  };
+
+  updateProgress();
+  window.addEventListener("scroll", updateProgress, { passive: true });
 }
 
 /* ---------------------------------------------------------------------- */
