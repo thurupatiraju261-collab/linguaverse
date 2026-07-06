@@ -79,6 +79,7 @@
 
       <div class="footer-bottom">
         <p>&copy; <span id="currentYear"></span> LinguaVerse. All rights reserved.</p>
+        <p class="made-with-love">Made with <span class="heart">❤️</span> by Raju</p>
         <div class="legal-links">
           <a href="#">Privacy Policy</a>
           <a href="#">Terms of Service</a>

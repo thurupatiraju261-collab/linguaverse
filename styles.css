@@ -154,7 +154,6 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   max-width: 1400px;
   margin: 0 auto;
   box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-  overflow: hidden;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -280,6 +279,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   z-index: 1000;
   padding: 24px 0;
   background: var(--surface);
+  border-radius: 24px 24px 0 0;
   transition: padding var(--transition-fast), box-shadow var(--transition-fast);
 }
 .navbar.scrolled {
@@ -394,12 +394,12 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
 /* ---------------------------------------------------------------------- */
-/* 6. HERO                                                                 */
+/* 6. HERO — Enhanced with illustration, trust bar, shimmer badge          */
 /* ---------------------------------------------------------------------- */
 .hero {
   position: relative;
   margin: 0 var(--space-md) var(--space-2xl);
-  padding: 120px 40px;
+  padding: 100px 40px 80px;
   border-radius: 24px;
   overflow: hidden;
   background-image: url('https://images.unsplash.com/photo-1466611653911-95081537e5b7?q=80&w=2070&auto=format&fit=crop');
@@ -408,14 +408,28 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   background-repeat: no-repeat;
   display: flex;
   align-items: center;
-  min-height: 600px;
+  min-height: 620px;
 }
 .hero::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(to right, rgba(10, 61, 60, 0.8) 0%, rgba(10, 61, 60, 0.2) 100%);
+  background: linear-gradient(135deg, rgba(10, 61, 60, 0.92) 0%, rgba(10, 61, 60, 0.7) 50%, rgba(10, 61, 60, 0.45) 100%);
   z-index: 0;
+}
+/* Decorative gradient orbs behind illustration */
+.hero::after {
+  content: "";
+  position: absolute;
+  right: 5%;
+  top: 15%;
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(227,178,124,0.25) 0%, transparent 70%);
+  border-radius: 50%;
+  z-index: 0;
+  filter: blur(40px);
+  pointer-events: none;
 }
 
 .hero .container {
@@ -423,30 +437,57 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   z-index: 1;
 }
 
+/* Two-column hero layout */
+.hero-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: var(--space-xl);
+}
+
 .hero-content {
-  max-width: 700px;
+  max-width: 600px;
 }
 
 .hero-rating { display: flex; align-items: center; gap: 10px; margin-bottom: var(--space-sm); }
 .hero-rating .stars { color: #fff; letter-spacing: 2px; }
 .hero-rating span { font-weight: 600; font-size: 0.9rem; color: rgba(255,255,255,0.8); }
 
-.hero-content h1 { margin-bottom: var(--space-sm); color: #fff; font-size: clamp(3rem, 5vw, 4.5rem); }
-.hero-content > p.lead { font-size: 1.1rem; max-width: 520px; margin-bottom: var(--space-md); color: rgba(255,255,255,0.9); }
+.hero-content h1 { margin-bottom: var(--space-sm); color: #fff; font-size: clamp(2.6rem, 5vw, 4rem); letter-spacing: -0.02em; }
+.hero-content > p.lead { font-size: 1.1rem; max-width: 520px; margin-bottom: var(--space-md); color: rgba(255,255,255,0.9); line-height: 1.7; }
 
-.hero-cta { display: flex; flex-wrap: wrap; gap: var(--space-sm); margin-bottom: var(--space-md); }
+.hero-cta { display: flex; flex-wrap: wrap; gap: var(--space-sm); margin-bottom: var(--space-lg); }
 
 .hero-cta .btn-primary {
   background: #fff;
   color: var(--text-primary);
   box-shadow: 0 8px 24px rgba(0,0,0,0.1);
 }
+.hero-cta .btn-primary i { transition: transform 0.3s ease; }
+.hero-cta .btn-primary:hover i { transform: translateX(4px); }
 .hero-cta .btn-secondary {
   background: rgba(255,255,255,0.1);
   color: #fff;
   border-color: rgba(255,255,255,0.3);
   backdrop-filter: blur(8px);
 }
+
+/* Glow effect on primary hero button */
+.btn-glow {
+  position: relative;
+}
+.btn-glow::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(227,178,124,0.4), rgba(75,181,181,0.4));
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  filter: blur(12px);
+}
+.btn-glow:hover::after { opacity: 1; }
 
 .hero-trust { display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-md); }
 .hero-trust .avatars { display: flex; }
@@ -468,6 +509,84 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   backdrop-filter: blur(8px);
 }
 
+/* Shimmer effect on the hero badge */
+.badge-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.badge-shimmer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+  animation: shimmer 3s infinite;
+}
+
+/* ---- Hero trust bar (glass strip beneath CTA) ---- */
+.hero-trust-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: var(--radius-lg);
+  padding: 18px 28px;
+  flex-wrap: wrap;
+}
+.hero-trust-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+}
+.hero-trust-item > i {
+  font-size: 1.1rem;
+  color: var(--color-accent);
+}
+.hero-trust-number {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+.hero-trust-suffix {
+  font-size: 0.85rem;
+  opacity: 0.85;
+  font-weight: 500;
+}
+.hero-trust-divider {
+  width: 1px;
+  height: 28px;
+  background: rgba(255,255,255,0.2);
+  flex-shrink: 0;
+}
+
+/* ---- Hero SVG illustration ---- */
+.hero-illustration {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hero-svg {
+  width: 100%;
+  max-width: 440px;
+  height: auto;
+  filter: drop-shadow(0 10px 30px rgba(0,0,0,0.2));
+}
+
+/* Floating animation for the whole illustration */
+.hero-float {
+  animation: heroFloat 5s ease-in-out infinite;
+}
+/* Staggered float for child elements inside the SVG */
+.hero-float-child {
+  animation: heroChildFloat 4s ease-in-out infinite;
+}
+
 /* Hide old hero visual elements */
 .hero-visual, .hero-grid-bg { display: none !important; }
 
@@ -475,36 +594,50 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 /* 8. CARDS & COMPONENTS (defined before section 7 usage below on purpose) */
 /* ---------------------------------------------------------------------- */
 
-/* Language card */
+/* Language card — Enhanced with gradient glow, lift+scale, popularity badge */
 .lang-grid { grid-template-columns: repeat(3, 1fr); }
 .lang-card {
   background: var(--surface);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   padding: var(--space-md);
-  transition: transform var(--transition-med), box-shadow var(--transition-med), border-color var(--transition-fast);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1), border-color var(--transition-fast);
   position: relative;
   overflow: hidden;
 }
+/* Gradient border glow on hover */
 .lang-card::before {
   content: "";
   position: absolute; inset: 0;
-  background: var(--gradient-primary);
+  background: linear-gradient(135deg, rgba(75,181,181,0.08), rgba(227,178,124,0.08));
   opacity: 0;
-  transition: opacity var(--transition-fast);
+  transition: opacity 0.4s ease;
   z-index: 0;
 }
 .lang-card:hover {
-  transform: translateY(-8px);
-  box-shadow: var(--shadow-lg);
-  border-color: transparent;
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 50px rgba(20, 20, 43, 0.14), 0 0 0 1px rgba(75,181,181,0.2);
+  border-color: rgba(75,181,181,0.3);
 }
+.lang-card:hover::before { opacity: 1; }
 .lang-card > * { position: relative; z-index: 1; }
 
 .lang-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-sm); }
-.lang-card-flag { font-size: 2.4rem; line-height: 1; }
+
+/* Flag with subtle background circle */
+.lang-card-flag {
+  font-size: 2.4rem;
+  line-height: 1;
+  width: 52px; height: 52px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg-alt);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
 .lang-card .difficulty-tag {
   font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: var(--radius-full);
+  letter-spacing: 0.03em;
 }
 .difficulty-tag.Easy { background: rgba(20, 184, 166, 0.15); color: var(--color-secondary); }
 .difficulty-tag.Medium { background: rgba(245, 158, 11, 0.15); color: var(--color-accent); }
@@ -518,7 +651,28 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .lang-card-meta span { font-size: 0.82rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
 .lang-card-meta i { color: var(--color-primary); }
 
+/* Popularity badge */
+.popularity-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(251, 113, 133, 0.15));
+  color: var(--color-coral);
+  margin-left: auto;
+}
+
+/* Learn More button enhancement */
 .lang-card .btn { width: 100%; }
+.lang-card .btn i {
+  transition: transform 0.3s ease;
+}
+.lang-card:hover .btn i {
+  transform: translateX(4px);
+}
 
 /* Generic info card (used across about/pricing/contact/details) */
 .info-card {
@@ -540,7 +694,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .info-card .icon-wrap { margin-bottom: var(--space-sm); }
 
 /* ---------------------------------------------------------------------- */
-/* 7. TRUST / STATS SECTION                                                */
+/* 7. TRUST / STATS SECTION — Enhanced with glass cards & colorful icons   */
 /* ---------------------------------------------------------------------- */
 .trust-section { background: var(--gradient-hero); position: relative; overflow: hidden; }
 .trust-section::before {
@@ -548,8 +702,39 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.12), transparent 45%);
 }
 .stats-grid { grid-template-columns: repeat(6, 1fr); position: relative; z-index: 1; }
+
+/* Glassmorphic stat card */
 .stat-card { text-align: center; color: #fff; }
-.stat-card .stat-icon { font-size: 1.6rem; margin-bottom: 8px; opacity: 0.9; }
+.glass-stat {
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-md);
+  padding: var(--space-md) var(--space-sm);
+  transition: transform var(--transition-fast), background var(--transition-fast);
+}
+.glass-stat:hover {
+  transform: translateY(-4px);
+  background: rgba(255,255,255,0.1);
+}
+
+/* Colorful icon wrappers — each stat gets a unique gradient */
+.stat-icon-wrap {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 10px;
+  font-size: 1.2rem;
+  color: #fff;
+}
+.stat-icon-wrap.stat-icon--learners { background: linear-gradient(135deg, #4BB5B5, #2B7A78); }
+.stat-icon-wrap.stat-icon--topics   { background: linear-gradient(135deg, #E3B27C, #D49D63); }
+.stat-icon-wrap.stat-icon--languages{ background: linear-gradient(135deg, #167A78, #0A3D3C); }
+.stat-icon-wrap.stat-icon--rating   { background: linear-gradient(135deg, #E08546, #E3B27C); }
+.stat-icon-wrap.stat-icon--lessons  { background: linear-gradient(135deg, #6366F1, #8B5CF6); }
+.stat-icon-wrap.stat-icon--responsive{ background: linear-gradient(135deg, #10B981, #059669); }
+
 .stat-number { font-family: var(--font-display); font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 700; }
 .stat-label { font-size: 0.85rem; opacity: 0.85; margin-top: 4px; }
 
@@ -784,39 +969,76 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .level-card .level-label { font-family: var(--font-display); font-weight: 700; color: var(--color-primary); margin-bottom: 6px; }
 
 /* ---------------------------------------------------------------------- */
-/* 9. FOOTER                                                               */
+/* 9. FOOTER — Enhanced with color-coded socials, glow newsletter, accents */
 /* ---------------------------------------------------------------------- */
-.site-footer { background: #1E293B; color: #F8FAFC; border-top: none; padding: var(--space-2xl) 0 var(--space-md); }
+.site-footer { background: #1E293B; color: #F8FAFC; border-top: none; padding: var(--space-2xl) 0 var(--space-md); border-radius: 0 0 24px 24px; }
 .footer-grid { grid-template-columns: 1.4fr repeat(4, 1fr); margin-bottom: var(--space-xl); }
 .footer-brand .nav-brand { margin-bottom: var(--space-sm); color: #fff; }
 .footer-brand p { font-size: 0.92rem; max-width: 280px; margin-bottom: var(--space-md); color: #94A3B8; }
-.footer-col h4 { font-size: 0.95rem; margin-bottom: var(--space-sm); color: #fff; }
-.footer-col ul li { margin-bottom: 10px; }
-.footer-col ul li a { font-size: 0.9rem; color: #94A3B8; transition: color var(--transition-fast); }
-.footer-col ul li a:hover { color: #fff; }
 
+/* Footer column header — subtle left accent */
+.footer-col h4 {
+  font-size: 0.95rem;
+  margin-bottom: var(--space-sm);
+  color: #fff;
+  padding-left: 12px;
+  border-left: 3px solid var(--color-accent);
+}
+.footer-col ul li { margin-bottom: 10px; }
+
+/* Footer link — slide underline on hover */
+.footer-col ul li a {
+  font-size: 0.9rem;
+  color: #94A3B8;
+  transition: color var(--transition-fast), padding-left var(--transition-fast);
+  position: relative;
+}
+.footer-col ul li a:hover {
+  color: #fff;
+  padding-left: 6px;
+}
+
+/* Color-coded social icon hovers */
 .social-links { display: flex; gap: 10px; }
 .social-links a {
   width: 38px; height: 38px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   background: rgba(255,255,255,0.1); border: 1px solid transparent;
   color: #fff;
-  transition: all var(--transition-fast);
+  transition: all 0.3s ease;
 }
-.social-links a:hover { background: var(--color-primary); color: #fff; transform: translateY(-3px); }
+.social-links a:hover { transform: translateY(-3px) scale(1.1); }
+.social-links a[aria-label="Facebook"]:hover  { background: #1877F2; }
+.social-links a[aria-label="Instagram"]:hover { background: linear-gradient(135deg, #833AB4, #F77737, #E1306C); }
+.social-links a[aria-label="LinkedIn"]:hover  { background: #0A66C2; }
+.social-links a[aria-label="YouTube"]:hover   { background: #FF0000; }
+.social-links a[aria-label*="Twitter"]:hover  { background: #1DA1F2; }
+.social-links a[aria-label="GitHub"]:hover    { background: #6E5494; }
 
+/* Newsletter form — glowing border on focus */
 .newsletter-form { display: flex; gap: 8px; margin-top: var(--space-sm); }
 .newsletter-form input {
   flex: 1; padding: 12px 16px; border-radius: var(--radius-full);
   border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1);
   color: #fff;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 .newsletter-form input::placeholder { color: #94A3B8; }
+.newsletter-form input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(227, 178, 124, 0.25);
+}
 .newsletter-form button {
   width: 44px; height: 44px; border-radius: 50%;
   background: var(--color-primary); color: #fff; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
   border: none; cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+.newsletter-form button:hover {
+  background: var(--color-primary-light);
+  transform: scale(1.08);
 }
 
 .footer-bottom {
@@ -825,8 +1047,21 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   font-size: 0.85rem; color: #94A3B8; flex-wrap: wrap; gap: 10px;
 }
 .footer-bottom .legal-links { display: flex; gap: var(--space-sm); }
+.footer-bottom .legal-links a { transition: color var(--transition-fast); }
+.footer-bottom .legal-links a:hover { color: #fff; }
 
-/* Back to top */
+/* "Made with ❤️ by Raju" — heart pulse */
+.made-with-love {
+  font-size: 0.85rem;
+  color: #94A3B8;
+}
+.made-with-love .heart {
+  color: #EF4444;
+  display: inline-block;
+  animation: heartPulse 1.4s ease-in-out infinite;
+}
+
+/* Back to top — enhanced with pulse ring */
 .back-to-top {
   position: fixed; bottom: 28px; right: 28px; z-index: 900;
   width: 48px; height: 48px; border-radius: 50%;
@@ -838,6 +1073,15 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 .back-to-top.visible { opacity: 1; visibility: visible; transform: translateY(0); }
 .back-to-top:hover { transform: translateY(-4px); }
+/* Pulse ring when visible */
+.back-to-top.visible::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid var(--color-primary-light);
+  animation: pulseRing 2s ease-out infinite;
+}
 
 /* Loading screen */
 .page-loader {
@@ -850,7 +1094,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .loader-mark { width: 60px; height: 60px; animation: spin 1.4s linear infinite; }
 
 /* ---------------------------------------------------------------------- */
-/* 10. ANIMATIONS                                                          */
+/* 10. ANIMATIONS — Enhanced with hero float, shimmer, pulse, stagger     */
 /* ---------------------------------------------------------------------- */
 @keyframes floatShape {
   0%, 100% { transform: translate(0, 0) scale(1); }
@@ -867,6 +1111,45 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+/* NEW: Hero illustration floating */
+@keyframes heroFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-16px); }
+}
+/* NEW: Staggered child float inside the SVG */
+@keyframes heroChildFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+/* NEW: Shimmer sweep for badges */
+@keyframes shimmer {
+  0%   { left: -100%; }
+  100% { left: 200%; }
+}
+/* NEW: Back-to-top pulse ring */
+@keyframes pulseRing {
+  0%   { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+/* NEW: Fade in + slide up for reveal stagger */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+/* NEW: Heart pulse for footer credit */
+@keyframes heartPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+/* Stagger reveal for grid children */
+.reveal-stagger > .reveal:nth-child(1) { transition-delay: 0.05s; }
+.reveal-stagger > .reveal:nth-child(2) { transition-delay: 0.1s; }
+.reveal-stagger > .reveal:nth-child(3) { transition-delay: 0.15s; }
+.reveal-stagger > .reveal:nth-child(4) { transition-delay: 0.2s; }
+.reveal-stagger > .reveal:nth-child(5) { transition-delay: 0.25s; }
+.reveal-stagger > .reveal:nth-child(6) { transition-delay: 0.3s; }
 
 /* ---------------------------------------------------------------------- */
 /* SCROLL PROGRESS BAR                                                     */

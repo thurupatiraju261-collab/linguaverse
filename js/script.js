@@ -280,6 +280,8 @@ function starsFor(level) {
 function renderFeaturedLanguageCards() {
   const grid = document.querySelector("#featuredLanguages");
   if (!grid || typeof LANGUAGES === "undefined") return;
+  /* Add reveal-stagger class for staggered entry animation */
+  grid.classList.add("reveal-stagger");
   grid.innerHTML = LANGUAGES.map(languageCardTemplate).join("");
   initScrollReveal();
 }
@@ -290,6 +292,7 @@ function renderFeaturedLanguageCards() {
 function renderAllLanguageCards() {
   const grid = document.querySelector("#allLanguages");
   if (!grid || typeof LANGUAGES === "undefined") return;
+  grid.classList.add("reveal-stagger");
   grid.innerHTML = LANGUAGES.map(languageCardTemplate).join("");
   initScrollReveal();
 
@@ -308,12 +311,32 @@ function renderAllLanguageCards() {
   });
 }
 
+/* Map difficulty to a friendlier label */
+function difficultyLabel(diff) {
+  const map = { Easy: "Beginner", Medium: "Intermediate", Hard: "Advanced" };
+  return map[diff] || diff;
+}
+
+/* Map popularity to an emoji icon */
+function popularityIcon(pop) {
+  const map = { Popular: "🔥", Trending: "🚀", New: "✨" };
+  return map[pop] || "";
+}
+
 function languageCardTemplate(lang) {
+  /* Build optional popularity badge */
+  const popBadge = lang.popularity
+    ? `<span class="popularity-badge">${popularityIcon(lang.popularity)} ${lang.popularity}</span>`
+    : "";
+
   return `
     <article class="lang-card reveal">
       <div class="lang-card-top">
         <span class="lang-card-flag" aria-hidden="true">${lang.flag}</span>
-        <span class="difficulty-tag ${lang.difficulty}">${lang.difficulty}</span>
+        <div style="display:flex;align-items:center;gap:8px;">
+          ${popBadge}
+          <span class="difficulty-tag ${lang.difficulty}">${difficultyLabel(lang.difficulty)}</span>
+        </div>
       </div>
       <h3>${lang.name}</h3>
       <p class="native-name">${lang.nativeName} · ${lang.tagline}</p>

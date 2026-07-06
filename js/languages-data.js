@@ -19,6 +19,7 @@ const LANGUAGES = [
     duration: "3–6 months",
     learners: "9,200+",
     accent: "indigo",
+    popularity: "Popular",
     details: {
       bannerSubtitle: "A West Germanic language spoken across every continent",
       history: "English grew out of the dialects brought to Britain by Anglo-Saxon settlers around the 5th century, absorbed thousands of French words after 1066, and later spread worldwide through trade and colonisation, picking up vocabulary from dozens of languages along the way.",
@@ -97,6 +98,7 @@ const LANGUAGES = [
     duration: "5–8 months",
     learners: "6,400+",
     accent: "amber",
+    popularity: "Trending",
     details: {
       bannerSubtitle: "An Indo-Aryan language written in the Devanagari script",
       history: "Hindi developed from Sanskrit-derived Prakrit dialects of North India and was standardised in the 19th–20th centuries. It shares deep vocabulary roots with Sanskrit and everyday roots with Urdu, and today serves as one of India's official languages.",
@@ -175,6 +177,7 @@ const LANGUAGES = [
     duration: "4–6 months",
     learners: "7,800+",
     accent: "coral",
+    popularity: "Popular",
     details: {
       bannerSubtitle: "A Romance language spoken natively by over 480 million people",
       history: "Spanish evolved from Vulgar Latin spoken on the Iberian Peninsula and spread across the Americas, the Caribbean and parts of Africa and Asia through colonisation from the 15th century onward, absorbing Arabic influence along the way.",
@@ -253,6 +256,7 @@ const LANGUAGES = [
     duration: "5–7 months",
     learners: "5,900+",
     accent: "indigo",
+    popularity: "Trending",
     details: {
       bannerSubtitle: "A Romance language and a working language of the UN and EU",
       history: "French descended from the Latin spoken in Roman Gaul, standardised around the Paris region, and spread through French colonial expansion so that today it is spoken natively and as a second language across five continents.",
@@ -331,6 +335,7 @@ const LANGUAGES = [
     duration: "10–18 months",
     learners: "4,300+",
     accent: "coral",
+    popularity: "New",
     details: {
       bannerSubtitle: "A language isolate written with three combined scripts",
       history: "Japanese developed largely in isolation on the Japanese archipelago, borrowing Chinese characters (Kanji) starting around the 5th century and later developing two phonetic scripts, Hiragana and Katakana, to fit its own grammar.",
@@ -409,6 +414,7 @@ const LANGUAGES = [
     duration: "6–9 months",
     learners: "3,100+",
     accent: "amber",
+    popularity: "New",
     details: {
       bannerSubtitle: "A classical Dravidian language spoken mainly in South India",
       history: "Telugu descends from the Dravidian language family and has a continuous literary tradition dating back over a thousand years, historically nicknamed the 'Italian of the East' for its vowel-rich, melodic sound.",
