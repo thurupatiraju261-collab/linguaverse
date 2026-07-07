@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Users Management — LinguaVerse Admin</title>
+<meta name="description" content="Manage all registered learners on LinguaVerse." />
+<meta name="robots" content="noindex, nofollow" />
+
+<link rel="icon" type="image/svg+xml" href="../images/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+<link rel="stylesheet" href="../styles.css" />
+<link rel="stylesheet" href="../css/admin.css" />
+<link rel="stylesheet" href="../css/admin-responsive.css" />
+
+<script src="../js/theme.js"></script>
+
+<style>
+  .admin-breadcrumb { font-size:0.85rem; color:var(--text-muted); margin-bottom:8px; }
+  .admin-breadcrumb a { color:var(--text-muted); transition:color var(--transition-fast); }
+  .admin-breadcrumb a:hover { color:var(--color-primary); }
+  .admin-breadcrumb .sep { margin:0 6px; }
+  .admin-breadcrumb .current { color:var(--text-secondary); font-weight:600; }
+
+  .usr-toolbar { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+  .usr-toolbar-left { display:flex; align-items:center; gap:12px; flex-wrap:wrap; flex:1; }
+
+  .usr-search { position:relative; width:100%; max-width:280px; }
+  .usr-search i { position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--text-muted); font-size:0.85rem; }
+  .usr-search input {
+    width:100%; padding:10px 14px 10px 38px;
+    border-radius:var(--radius-full); border:1.5px solid var(--border-color);
+    background:var(--surface-alt); font-size:0.88rem; color:var(--text-primary);
+  }
+  .usr-search input:focus { border-color:var(--color-primary); outline:none; }
+
+  .usr-select {
+    padding:10px 14px; border-radius:var(--radius-full);
+    border:1.5px solid var(--border-color); background:var(--surface-alt);
+    color:var(--text-secondary); font-size:0.88rem; cursor:pointer; min-width:160px;
+  }
+  .usr-select:focus { border-color:var(--color-primary); outline:none; }
+
+  /* User avatar */
+  .usr-avatar {
+    width:38px; height:38px; border-radius:50%;
+    display:inline-flex; align-items:center; justify-content:center;
+    font-size:0.82rem; font-weight:700; color:#fff; flex-shrink:0;
+  }
+
+  /* Progress bar */
+  .usr-progress-wrap { width:100%; max-width:100px; }
+  .usr-progress-bar {
+    height:6px; border-radius:var(--radius-full);
+    background:var(--border-color); overflow:hidden; margin-bottom:2px;
+  }
+  .usr-progress-fill { height:100%; border-radius:var(--radius-full); background:var(--gradient-primary); }
+  .usr-progress-label { font-size:0.72rem; color:var(--text-muted); }
+
+  /* Status pills */
+  .admin-status-pill.status-active   { background:rgba(20,184,166,0.12); color:#0d9488; }
+  .admin-status-pill.status-blocked  { background:rgba(220,38,38,0.12); color:#dc2626; }
+  .admin-status-pill.status-inactive { background:rgba(122,122,148,0.14); color:var(--text-muted); }
+
+  /* Action buttons */
+  .usr-action-btn {
+    width:32px; height:32px; border-radius:50%;
+    display:inline-flex; align-items:center; justify-content:center;
+    border:1px solid var(--border-color); background:var(--surface-alt);
+    color:var(--text-secondary); margin-right:3px;
+    transition:all var(--transition-fast);
+  }
+  .usr-action-btn:hover { color:#fff; background:var(--color-primary); border-color:transparent; transform:translateY(-2px); }
+  .usr-action-btn.block:hover  { background:#d97706; }
+  .usr-action-btn.danger:hover { background:#dc2626; }
+
+  /* Pagination */
+  .usr-pagination { display:flex; align-items:center; justify-content:center; gap:8px; margin-top:var(--space-md); flex-wrap:wrap; }
+  .usr-page-btn {
+    min-width:38px; height:38px; padding:0 10px;
+    border-radius:var(--radius-sm); border:1px solid var(--border-color);
+    background:var(--surface-alt); color:var(--text-secondary);
+    font-weight:600; font-size:0.85rem; transition:all var(--transition-fast);
+  }
+  .usr-page-btn:hover:not(:disabled) { color:var(--color-primary); border-color:var(--color-primary); }
+  .usr-page-btn.active { background:var(--gradient-primary); color:#fff; border-color:transparent; }
+  .usr-page-btn:disabled { opacity:0.4; cursor:not-allowed; }
+
+  /* Empty state */
+  .usr-empty { display:none; flex-direction:column; align-items:center; text-align:center; padding:var(--space-xl) var(--space-md); color:var(--text-muted); }
+  .usr-empty.show { display:flex; }
+  .usr-empty i { font-size:2.6rem; color:var(--color-primary); margin-bottom:14px; opacity:0.55; }
+  .usr-empty h4 { color:var(--text-primary); margin-bottom:6px; }
+
+  /* Modal */
+  .usr-modal-overlay {
+    position:fixed; inset:0; z-index:3000; padding:var(--space-md);
+    background:rgba(15,15,26,0.55);
+    display:flex; align-items:center; justify-content:center;
+    opacity:0; visibility:hidden; transition:opacity var(--transition-fast), visibility var(--transition-fast);
+  }
+  .usr-modal-overlay.open { opacity:1; visibility:visible; }
+  .usr-modal {
+    width:100%; max-width:520px; max-height:90vh; overflow-y:auto;
+    background:var(--surface); border-radius:var(--radius-lg); box-shadow:var(--shadow-lg);
+    transform:translateY(24px); transition:transform var(--transition-fast);
+  }
+  .usr-modal-overlay.open .usr-modal { transform:translateY(0); }
+  .usr-modal-header { display:flex; align-items:center; justify-content:space-between; padding:var(--space-md); border-bottom:1px solid var(--border-color); }
+  .usr-modal-header h3 { font-size:1.1rem; margin:0; }
+  .usr-modal-close { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--text-muted); transition:all var(--transition-fast); }
+  .usr-modal-close:hover { background:var(--surface-alt); color:#dc2626; }
+  .usr-modal-body { padding:var(--space-md); }
+  .usr-modal-footer { display:flex; justify-content:flex-end; gap:10px; padding:var(--space-md); border-top:1px solid var(--border-color); }
+
+  .usr-danger-icon { width:56px; height:56px; border-radius:50%; margin:0 auto var(--space-sm); background:rgba(220,38,38,0.1); color:#dc2626; display:flex; align-items:center; justify-content:center; font-size:1.4rem; }
+
+  /* View modal profile */
+  .usr-view-header { display:flex; align-items:center; gap:var(--space-sm); margin-bottom:var(--space-md); }
+  .usr-view-avatar { width:64px; height:64px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.4rem; font-weight:700; color:#fff; }
+  .usr-view-info h4 { margin:0 0 4px; }
+  .usr-view-info p { margin:0; font-size:0.88rem; color:var(--text-muted); }
+  .usr-detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-sm); }
+  .usr-detail-item label { display:block; font-size:0.78rem; color:var(--text-muted); margin-bottom:4px; text-transform:uppercase; letter-spacing:0.04em; }
+  .usr-detail-item span { font-size:0.9rem; font-weight:500; color:var(--text-primary); }
+
+  /* Form fields */
+  .admin-form-group select {
+    width:100%; padding:12px 16px; border-radius:var(--radius-sm);
+    border:1.5px solid var(--border-color); background:var(--surface-alt);
+    color:var(--text-primary); font-size:0.92rem;
+  }
+  .admin-form-group select:focus { border-color:var(--color-primary); outline:none; }
+  .admin-form-row-2 { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-sm); }
+
+  /* Toast */
+  .usr-toast {
+    position:fixed; bottom:24px; right:24px; z-index:4000;
+    display:flex; align-items:center; gap:10px;
+    background:var(--surface); border:1px solid var(--border-color); box-shadow:var(--shadow-lg);
+    border-radius:var(--radius-md); padding:14px 18px; font-size:0.9rem; font-weight:500;
+    transform:translateX(140%); transition:transform var(--transition-fast);
+    max-width:min(320px, calc(100vw - 48px));
+  }
+  .usr-toast.show { transform:translateX(0); }
+  .usr-toast i { font-size:1.1rem; flex-shrink:0; }
+  .usr-toast.success i { color:#0d9488; }
+  .usr-toast.error i   { color:#dc2626; }
+  .usr-toast.warn i    { color:#d97706; }
+
+  @media (max-width:700px) {
+    .admin-form-row-2 { grid-template-columns:1fr; }
+    .usr-toolbar { flex-direction:column; align-items:stretch; }
+    .usr-toolbar-left { flex-direction:column; }
+    .usr-search { max-width:100%; }
+    .usr-toast { left:16px; right:16px; max-width:none; }
+    .usr-detail-grid { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body class="admin-body">
+<div class="admin-layout">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="admin-sidebar">
+    <a href="../index.html" class="admin-sidebar-brand">
+      <img src="../images/logo.svg" alt="LinguaVerse logo" />
+      <span>LinguaVerse</span>
+    </a>
+    <nav class="admin-sidebar-nav" aria-label="Admin navigation">
+      <a href="dashboard.html"><i class="fa-solid fa-gauge-high"></i> <span>Dashboard</span></a>
+      <a href="languages.html"><i class="fa-solid fa-language"></i> <span>Languages</span></a>
+      <a href="lessons.html"><i class="fa-solid fa-book-open"></i> <span>Lessons</span></a>
+      <a href="users.html" class="active"><i class="fa-solid fa-users"></i> <span>Users</span></a>
+      <a href="messages.html"><i class="fa-solid fa-envelope-open-text"></i> <span>Contact Messages</span></a>
+      <a href="pricing.html"><i class="fa-solid fa-tags"></i> <span>Pricing</span></a>
+      <a href="settings.html"><i class="fa-solid fa-gear"></i> <span>Settings</span></a>
+    </nav>
+    <div class="admin-sidebar-footer">
+      <button type="button" data-logout>
+        <i class="fa-solid fa-right-from-bracket"></i> <span>Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <div class="admin-sidebar-overlay"></div>
+
+  <!-- ===== MAIN ===== -->
+  <div class="admin-main">
+
+    <header class="admin-topbar">
+      <button class="admin-sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <form class="admin-search" id="adminSearchForm" role="search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="search" placeholder="Search users, lessons, languages..." aria-label="Search" />
+      </form>
+      <div class="admin-topbar-actions">
+        <div class="admin-dropdown">
+          <button class="admin-icon-btn" data-dropdown-trigger aria-label="Notifications">
+            <i class="fa-regular fa-bell"></i>
+            <span class="admin-badge-dot"></span>
+          </button>
+          <div class="admin-dropdown-menu">
+            <h4>Notifications</h4>
+            <div class="admin-notif-item">
+              <i class="fa-solid fa-user-plus"></i>
+              <div><div>12 new learners joined today</div><div class="admin-notif-time">2 hours ago</div></div>
+            </div>
+          </div>
+        </div>
+        <button class="theme-toggle" aria-label="Toggle dark mode">
+          <i class="fa-solid fa-moon"></i>
+          <i class="fa-solid fa-sun"></i>
+        </button>
+        <div class="admin-dropdown">
+          <button class="admin-profile-btn" data-dropdown-trigger>
+            <span class="admin-profile-avatar" data-admin-initials>A</span>
+            <span data-admin-name>Admin</span>
+            <i class="fa-solid fa-chevron-down" style="font-size:0.7rem;"></i>
+          </button>
+          <div class="admin-dropdown-menu admin-profile-menu">
+            <a href="#"><i class="fa-solid fa-user"></i> My Profile</a>
+            <a href="settings.html"><i class="fa-solid fa-gear"></i> Account Settings</a>
+            <hr />
+            <button type="button" data-logout><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ===== PAGE CONTENT ===== -->
+    <main class="admin-content">
+
+      <div class="admin-page-title admin-fade-in">
+        <nav class="admin-breadcrumb">
+          <a href="dashboard.html">Dashboard</a>
+          <span class="sep">/</span>
+          <span class="current">Users Management</span>
+        </nav>
+        <h1>Users Management</h1>
+        <p style="color:var(--text-muted);font-size:0.92rem;">View, edit, block and manage all registered learners.</p>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="admin-panel admin-fade-in">
+        <div class="usr-toolbar">
+          <div class="usr-toolbar-left">
+            <div class="usr-search">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="userSearchInput" placeholder="Search by name or email..." aria-label="Search users" />
+            </div>
+            <select class="usr-select" id="userLangFilter" aria-label="Filter by language">
+              <option value="all">All Languages</option>
+              <option value="English">English</option>
+              <option value="Hindi">Hindi</option>
+              <option value="Spanish">Spanish</option>
+              <option value="French">French</option>
+              <option value="Japanese">Japanese</option>
+              <option value="Telugu">Telugu</option>
+            </select>
+            <select class="usr-select" id="userStatusFilter" aria-label="Filter by status">
+              <option value="all">All Status</option>
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+              <option value="Blocked">Blocked</option>
+            </select>
+          </div>
+          <span class="badge" id="userCountBadge"><i class="fa-solid fa-users"></i> 0 users</span>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="admin-panel admin-fade-in">
+        <div class="admin-panel-header">
+          <h3>All Learners</h3>
+        </div>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Avatar</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Language</th>
+                <th>Join Date</th>
+                <th>Progress</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="usersTableBody"></tbody>
+          </table>
+        </div>
+
+        <div class="usr-empty" id="usersEmptyState">
+          <i class="fa-solid fa-users-slash"></i>
+          <h4>No users found</h4>
+          <p>Try adjusting your search or filters.</p>
+        </div>
+
+        <div class="usr-pagination" id="usersPagination"></div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ===== VIEW USER MODAL ===== -->
+<div class="usr-modal-overlay" id="viewUserModalOverlay">
+  <div class="usr-modal">
+    <div class="usr-modal-header">
+      <h3>User Profile</h3>
+      <button type="button" class="usr-modal-close" data-usr-close="viewUserModalOverlay" aria-label="Close">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <div class="usr-modal-body">
+      <div class="usr-view-header">
+        <div class="usr-view-avatar" id="viewUserAvatar">A</div>
+        <div class="usr-view-info">
+          <h4 id="viewUserName">User Name</h4>
+          <p id="viewUserEmail">user@email.com</p>
+        </div>
+      </div>
+      <div class="usr-detail-grid">
+        <div class="usr-detail-item"><label>Language</label><span id="viewUserLang">—</span></div>
+        <div class="usr-detail-item"><label>Status</label><span id="viewUserStatus">—</span></div>
+        <div class="usr-detail-item"><label>Join Date</label><span id="viewUserJoin">—</span></div>
+        <div class="usr-detail-item"><label>Progress</label><span id="viewUserProgress">—</span></div>
+        <div class="usr-detail-item"><label>Lessons Completed</label><span id="viewUserLessons">—</span></div>
+        <div class="usr-detail-item"><label>Streak</label><span id="viewUserStreak">—</span></div>
+      </div>
+    </div>
+    <div class="usr-modal-footer">
+      <button type="button" class="btn btn-secondary" data-usr-close="viewUserModalOverlay">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== EDIT USER MODAL ===== -->
+<div class="usr-modal-overlay" id="editUserModalOverlay">
+  <div class="usr-modal">
+    <div class="usr-modal-header">
+      <h3>Edit User</h3>
+      <button type="button" class="usr-modal-close" data-usr-close="editUserModalOverlay" aria-label="Close">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <form id="editUserForm">
+      <div class="usr-modal-body">
+        <div class="admin-form-row-2">
+          <div class="admin-form-group">
+            <label for="editUserName">Name</label>
+            <div class="admin-input-wrap">
+              <i class="fa-solid fa-user admin-input-icon"></i>
+              <input type="text" id="editUserName" required />
+            </div>
+          </div>
+          <div class="admin-form-group">
+            <label for="editUserEmail">Email</label>
+            <div class="admin-input-wrap">
+              <i class="fa-solid fa-envelope admin-input-icon"></i>
+              <input type="email" id="editUserEmail" required />
+            </div>
+          </div>
+        </div>
+        <div class="admin-form-row-2">
+          <div class="admin-form-group">
+            <label for="editUserLang">Learning Language</label>
+            <select id="editUserLang" required>
+              <option value="English">English</option>
+              <option value="Hindi">Hindi</option>
+              <option value="Spanish">Spanish</option>
+              <option value="French">French</option>
+              <option value="Japanese">Japanese</option>
+              <option value="Telugu">Telugu</option>
+            </select>
+          </div>
+          <div class="admin-form-group">
+            <label for="editUserStatus">Status</label>
+            <select id="editUserStatus" required>
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+              <option value="Blocked">Blocked</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="usr-modal-footer">
+        <button type="button" class="btn btn-secondary" data-usr-close="editUserModalOverlay">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ===== DELETE MODAL ===== -->
+<div class="usr-modal-overlay" id="deleteUserModalOverlay">
+  <div class="usr-modal" style="max-width:420px;text-align:center;">
+    <div class="usr-modal-body" style="padding-top:var(--space-lg);">
+      <div class="usr-danger-icon"><i class="fa-solid fa-trash"></i></div>
+      <h3 style="margin-bottom:8px;">Delete User?</h3>
+      <p style="color:var(--text-muted);font-size:0.9rem;">
+        Are you sure you want to delete <strong id="deleteUserNameLabel">this user</strong>? This action cannot be undone.
+      </p>
+    </div>
+    <div class="usr-modal-footer" style="justify-content:center;">
+      <button type="button" class="btn btn-secondary" data-usr-close="deleteUserModalOverlay">Cancel</button>
+      <button type="button" class="btn btn-accent" id="usrConfirmDeleteBtn">Yes, Delete</button>
+    </div>
+  </div>
+</div>
+
+<script src="../js/admin.js"></script>
+<script src="../js/admin-users.js"></script>
+</body>
+</html>

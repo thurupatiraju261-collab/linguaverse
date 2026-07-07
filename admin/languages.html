@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Languages Management — LinguaVerse Admin</title>
+<meta name="description" content="Manage every language course on LinguaVerse." />
+<meta name="robots" content="noindex, nofollow" />
+
+<link rel="icon" type="image/svg+xml" href="../images/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+<!-- Reusing the exact same stylesheets as the rest of the admin panel -->
+<link rel="stylesheet" href="../styles.css" />
+<link rel="stylesheet" href="../css/admin.css" />
+<link rel="stylesheet" href="../css/admin-responsive.css" />
+
+<script src="../js/theme.js"></script>
+
+<!--
+  Page-only styles for the new pieces this page introduces (breadcrumb,
+  toolbar, table action buttons, pagination, empty state, modals, toasts).
+  These are additive — every rule below either targets a brand-new class
+  scoped to this page, or gently extends an existing admin.css class
+  (e.g. .admin-form-group select) without redeclaring anything that
+  already exists in admin.css. Nothing in admin.css itself is touched.
+-->
+<style>
+  .admin-breadcrumb { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; }
+  .admin-breadcrumb a { color: var(--text-muted); transition: color var(--transition-fast); }
+  .admin-breadcrumb a:hover { color: var(--color-primary); }
+  .admin-breadcrumb .sep { margin: 0 6px; }
+  .admin-breadcrumb .current { color: var(--text-secondary); font-weight: 600; }
+
+  /* Toolbar: search + difficulty filters + Add Language button */
+  .lang-toolbar {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: var(--space-sm); flex-wrap: wrap;
+  }
+  .lang-toolbar-left { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; flex: 1; }
+
+  .lang-search { position: relative; width: 100%; max-width: 300px; }
+  .lang-search i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.85rem; }
+  .lang-search input {
+    width: 100%; padding: 10px 14px 10px 38px;
+    border-radius: var(--radius-full); border: 1.5px solid var(--border-color);
+    background: var(--surface-alt); font-size: 0.88rem; color: var(--text-primary);
+  }
+  .lang-search input:focus { border-color: var(--color-primary); outline: none; }
+
+  .lang-filter-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .lang-filter-chips button {
+    font-size: 0.82rem; font-weight: 600; padding: 8px 16px;
+    border-radius: var(--radius-full); border: 1px solid var(--border-color);
+    background: var(--surface-alt); color: var(--text-secondary);
+    transition: all var(--transition-fast);
+  }
+  .lang-filter-chips button:hover { color: var(--color-primary); }
+  .lang-filter-chips button.active { background: var(--gradient-primary); color: #fff; border-color: transparent; }
+
+  /* Table cells specific to this page */
+  .lang-flag-cell { font-size: 1.5rem; line-height: 1; }
+  .lang-name-cell strong { display: block; }
+  .lang-name-cell span { font-size: 0.78rem; color: var(--text-muted); }
+
+  .admin-status-pill.status-active { background: rgba(20, 184, 166, 0.12); color: var(--color-secondary); }
+  .admin-status-pill.status-inactive { background: rgba(122, 122, 148, 0.14); color: var(--text-muted); }
+
+  .lang-action-btn {
+    width: 34px; height: 34px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    border: 1px solid var(--border-color); background: var(--surface-alt);
+    color: var(--text-secondary); margin-right: 6px;
+    transition: all var(--transition-fast);
+  }
+  .lang-action-btn:hover { color: #fff; background: var(--color-primary); border-color: transparent; transform: translateY(-2px); }
+  .lang-action-btn.danger:hover { background: var(--color-coral); }
+
+  /* Pagination */
+  .lang-pagination { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: var(--space-md); flex-wrap: wrap; }
+  .lang-page-btn {
+    min-width: 38px; height: 38px; padding: 0 10px;
+    border-radius: var(--radius-sm); border: 1px solid var(--border-color);
+    background: var(--surface-alt); color: var(--text-secondary);
+    font-weight: 600; font-size: 0.85rem; transition: all var(--transition-fast);
+  }
+  .lang-page-btn:hover:not(:disabled) { color: var(--color-primary); border-color: var(--color-primary); }
+  .lang-page-btn.active { background: var(--gradient-primary); color: #fff; border-color: transparent; }
+  .lang-page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* Empty state */
+  .lang-empty-state { display: none; flex-direction: column; align-items: center; text-align: center; padding: var(--space-xl) var(--space-md); color: var(--text-muted); }
+  .lang-empty-state.show { display: flex; }
+  .lang-empty-state i { font-size: 2.6rem; color: var(--color-primary); margin-bottom: 14px; opacity: 0.55; }
+  .lang-empty-state h4 { color: var(--text-primary); margin-bottom: 6px; }
+  .lang-empty-state p { margin-bottom: var(--space-sm); }
+
+  /* Extend the existing admin form field styling to cover <select> too */
+  .admin-form-group select {
+    width: 100%; padding: 12px 16px; border-radius: var(--radius-sm);
+    border: 1.5px solid var(--border-color); background: var(--surface-alt);
+    color: var(--text-primary); font-size: 0.92rem;
+  }
+  .admin-form-group select:focus { border-color: var(--color-primary); outline: none; }
+  .admin-form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-sm); }
+
+  /* Modal */
+  .lang-modal-overlay {
+    position: fixed; inset: 0; z-index: 3000; padding: var(--space-md);
+    background: rgba(15, 15, 26, 0.55);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; visibility: hidden; transition: opacity var(--transition-fast), visibility var(--transition-fast);
+  }
+  .lang-modal-overlay.open { opacity: 1; visibility: visible; }
+  .lang-modal {
+    width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto;
+    background: var(--surface); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);
+    transform: translateY(24px); transition: transform var(--transition-fast);
+  }
+  .lang-modal-overlay.open .lang-modal { transform: translateY(0); }
+  .lang-modal-header { display: flex; align-items: center; justify-content: space-between; padding: var(--space-md); border-bottom: 1px solid var(--border-color); }
+  .lang-modal-header h3 { font-size: 1.1rem; }
+  .lang-modal-close { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text-muted); }
+  .lang-modal-close:hover { background: var(--surface-alt); color: var(--color-coral); }
+  .lang-modal-body { padding: var(--space-md); }
+  .lang-modal-footer { display: flex; justify-content: flex-end; gap: 10px; padding: var(--space-md); border-top: 1px solid var(--border-color); }
+  .lang-modal-danger-icon {
+    width: 56px; height: 56px; border-radius: 50%; margin: 0 auto var(--space-sm);
+    background: rgba(251, 113, 133, 0.12); color: var(--color-coral);
+    display: flex; align-items: center; justify-content: center; font-size: 1.4rem;
+  }
+
+  /* Toast */
+  .lang-toast {
+    position: fixed; bottom: 24px; right: 24px; z-index: 4000;
+    display: flex; align-items: center; gap: 10px;
+    background: var(--surface); border: 1px solid var(--border-color); box-shadow: var(--shadow-lg);
+    border-radius: var(--radius-md); padding: 14px 18px; font-size: 0.9rem; font-weight: 500;
+    transform: translateX(140%); transition: transform var(--transition-fast);
+    max-width: min(320px, calc(100vw - 48px));
+  }
+  .lang-toast.show { transform: translateX(0); }
+  .lang-toast i { font-size: 1.1rem; flex-shrink: 0; }
+  .lang-toast.success i { color: var(--color-secondary); }
+  .lang-toast.error i { color: var(--color-coral); }
+
+  @media (max-width: 560px) {
+    .admin-form-row-2 { grid-template-columns: 1fr; }
+    .lang-toast { left: 16px; right: 16px; max-width: none; }
+  }
+</style>
+</head>
+<body class="admin-body">
+
+<div class="admin-layout">
+
+  <!-- ===================== SIDEBAR (unchanged from dashboard.html) ===================== -->
+  <aside class="admin-sidebar">
+    <a href="../index.html" class="admin-sidebar-brand">
+      <img src="../images/logo.svg" alt="LinguaVerse logo" />
+      <span>LinguaVerse</span>
+    </a>
+
+    <nav class="admin-sidebar-nav" aria-label="Admin navigation">
+      <a href="dashboard.html"><i class="fa-solid fa-gauge-high"></i> <span>Dashboard</span></a>
+      <a href="languages.html" class="active"><i class="fa-solid fa-language"></i> <span>Languages</span></a>
+      <a href="lessons.html"><i class="fa-solid fa-book-open"></i> <span>Lessons</span></a>
+      <a href="users.html"><i class="fa-solid fa-users"></i> <span>Users</span></a>
+      <a href="messages.html"><i class="fa-solid fa-envelope-open-text"></i> <span>Contact Messages</span></a>
+      <a href="pricing.html"><i class="fa-solid fa-tags"></i> <span>Pricing</span></a>
+      <a href="settings.html"><i class="fa-solid fa-gear"></i> <span>Settings</span></a>
+    </nav>
+
+    <div class="admin-sidebar-footer">
+      <button type="button" data-logout>
+        <i class="fa-solid fa-right-from-bracket"></i> <span>Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <div class="admin-sidebar-overlay"></div>
+
+  <!-- ===================== MAIN COLUMN ===================== -->
+  <div class="admin-main">
+
+    <!-- Topbar (unchanged from dashboard.html) -->
+    <header class="admin-topbar">
+      <button class="admin-sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+      <form class="admin-search" id="adminSearchForm" role="search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="search" placeholder="Search languages, lessons, users..." aria-label="Search" />
+      </form>
+
+      <div class="admin-topbar-actions">
+        <div class="admin-dropdown">
+          <button class="admin-icon-btn" data-dropdown-trigger aria-label="Notifications">
+            <i class="fa-regular fa-bell"></i>
+            <span class="admin-badge-dot"></span>
+          </button>
+          <div class="admin-dropdown-menu">
+            <h4>Notifications</h4>
+            <div class="admin-notif-item">
+              <i class="fa-solid fa-envelope"></i>
+              <div>
+                <div>New contact message from Priya S.</div>
+                <div class="admin-notif-time">10 minutes ago</div>
+              </div>
+            </div>
+            <div class="admin-notif-item">
+              <i class="fa-solid fa-user-plus"></i>
+              <div>
+                <div>12 new learners joined today</div>
+                <div class="admin-notif-time">2 hours ago</div>
+              </div>
+            </div>
+            <div class="admin-notif-item">
+              <i class="fa-solid fa-circle-check"></i>
+              <div>
+                <div>Japanese course update published</div>
+                <div class="admin-notif-time">Yesterday</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="theme-toggle" aria-label="Toggle dark mode">
+          <i class="fa-solid fa-moon"></i>
+          <i class="fa-solid fa-sun"></i>
+        </button>
+
+        <div class="admin-dropdown">
+          <button class="admin-profile-btn" data-dropdown-trigger>
+            <span class="admin-profile-avatar" data-admin-initials>A</span>
+            <span data-admin-name>Admin</span>
+            <i class="fa-solid fa-chevron-down" style="font-size:0.7rem;"></i>
+          </button>
+          <div class="admin-dropdown-menu admin-profile-menu">
+            <a href="#"><i class="fa-solid fa-user"></i> My Profile</a>
+            <a href="#"><i class="fa-solid fa-gear"></i> Account Settings</a>
+            <hr />
+            <button type="button" data-logout><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ===================== PAGE CONTENT (new) ===================== -->
+    <main class="admin-content">
+
+      <div class="admin-page-title admin-fade-in">
+        <nav class="admin-breadcrumb" aria-label="Breadcrumb">
+          <a href="dashboard.html">Dashboard</a> <span class="sep">/</span> <span class="current">Languages Management</span>
+        </nav>
+        <h1>Languages Management</h1>
+        <p style="color:var(--text-muted);font-size:0.92rem;">Add, edit and manage every language course available on LinguaVerse.</p>
+      </div>
+
+      <!-- Toolbar: search, difficulty filter, add button -->
+      <div class="admin-panel admin-fade-in">
+        <div class="lang-toolbar">
+          <div class="lang-toolbar-left">
+            <div class="lang-search">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="languageSearchInput" placeholder="Search by language name..." aria-label="Search languages" />
+            </div>
+            <div class="lang-filter-chips" id="difficultyFilterChips">
+              <button type="button" class="active" data-difficulty="all">All</button>
+              <button type="button" data-difficulty="Beginner">Beginner</button>
+              <button type="button" data-difficulty="Intermediate">Intermediate</button>
+              <button type="button" data-difficulty="Advanced">Advanced</button>
+            </div>
+          </div>
+          <button type="button" class="btn btn-primary" id="openAddLanguageBtn">
+            <i class="fa-solid fa-plus"></i> Add Language
+          </button>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="admin-panel admin-fade-in">
+        <div class="admin-panel-header">
+          <h3>All Languages</h3>
+          <span class="badge" id="languageCountBadge"><i class="fa-solid fa-language"></i> 0 languages</span>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Flag</th>
+                <th>Language</th>
+                <th>Difficulty</th>
+                <th>Total Lessons</th>
+                <th>Learning Time</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="languagesTableBody">
+              <!-- Rows rendered dynamically by js/admin-languages.js -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Empty state -->
+        <div class="lang-empty-state" id="languagesEmptyState">
+          <i class="fa-solid fa-magnifying-glass-chart"></i>
+          <h4>No languages found</h4>
+          <p>Try a different search term or clear your filters.</p>
+          <button type="button" class="btn btn-secondary btn-sm" id="clearFiltersBtn">Clear Filters</button>
+        </div>
+
+        <!-- Pagination -->
+        <div class="lang-pagination" id="languagesPagination"></div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ===================== ADD / EDIT / VIEW MODAL ===================== -->
+<div class="lang-modal-overlay" id="languageFormModalOverlay">
+  <div class="lang-modal">
+    <div class="lang-modal-header">
+      <h3 id="languageFormModalTitle">Add New Language</h3>
+      <button type="button" class="lang-modal-close" data-close-modal="languageFormModalOverlay" aria-label="Close">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <form id="languageForm">
+      <div class="lang-modal-body">
+        <div class="admin-form-row-2">
+          <div class="admin-form-group">
+            <label for="langNameInput">Language Name</label>
+            <div class="admin-input-wrap">
+              <i class="fa-solid fa-language admin-input-icon"></i>
+              <input type="text" id="langNameInput" placeholder="e.g. Portuguese" required />
+            </div>
+            <span class="admin-field-error"></span>
+          </div>
+          <div class="admin-form-group">
+            <label for="langFlagInput">Flag Emoji</label>
+            <div class="admin-input-wrap">
+              <i class="fa-solid fa-flag admin-input-icon"></i>
+              <input type="text" id="langFlagInput" placeholder="🇵🇹" maxlength="4" required />
+            </div>
+            <span class="admin-field-error"></span>
+          </div>
+        </div>
+
+        <div class="admin-form-row-2">
+          <div class="admin-form-group">
+            <label for="langDifficultyInput">Difficulty</label>
+            <select id="langDifficultyInput" required>
+              <option value="Beginner">Beginner</option>
+              <option value="Intermediate">Intermediate</option>
+              <option value="Advanced">Advanced</option>
+            </select>
+          </div>
+          <div class="admin-form-group">
+            <label for="langStatusInput">Status</label>
+            <select id="langStatusInput" required>
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="admin-form-row-2">
+          <div class="admin-form-group">
+            <label for="langLessonsInput">Total Lessons</label>
+            <div class="admin-input-wrap">
+              <i class="fa-solid fa-book admin-input-icon"></i>
+              <input type="number" id="langLessonsInput" min="1" placeholder="e.g. 90" required />
+            </div>
+            <span class="admin-field-error"></span>
+          </div>
+          <div class="admin-form-group">
+            <label for="langTimeInput">Learning Time</label>
+            <div class="admin-input-wrap">
+              <i class="fa-regular fa-clock admin-input-icon"></i>
+              <input type="text" id="langTimeInput" placeholder="e.g. 4–6 months" required />
+            </div>
+            <span class="admin-field-error"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="lang-modal-footer">
+        <button type="button" class="btn btn-secondary" data-close-modal="languageFormModalOverlay">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="languageFormSubmitBtn">Add Language</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ===================== DELETE CONFIRMATION MODAL ===================== -->
+<div class="lang-modal-overlay" id="deleteConfirmModalOverlay">
+  <div class="lang-modal" style="max-width:420px;text-align:center;">
+    <div class="lang-modal-body" style="padding-top:var(--space-lg);">
+      <div class="lang-modal-danger-icon"><i class="fa-solid fa-trash"></i></div>
+      <h3 style="margin-bottom:8px;">Delete this language?</h3>
+      <p style="color:var(--text-muted);font-size:0.9rem;">
+        Are you sure you want to delete <strong id="deleteLanguageName">this language</strong>? This action cannot be undone.
+      </p>
+    </div>
+    <div class="lang-modal-footer" style="justify-content:center;">
+      <button type="button" class="btn btn-secondary" data-close-modal="deleteConfirmModalOverlay">Cancel</button>
+      <button type="button" class="btn btn-accent" id="confirmDeleteBtn">Yes, Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- Reusing the same shared scripts as the rest of the admin panel -->
+<script src="../js/admin.js"></script>
+<!-- New, page-specific script — does not modify admin.js -->
+<script src="../js/admin-languages.js"></script>
+</body>
+</html>

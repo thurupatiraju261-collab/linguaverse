@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Settings — LinguaVerse Admin</title>
+<meta name="description" content="Configure LinguaVerse platform settings." />
+<meta name="robots" content="noindex, nofollow" />
+
+<link rel="icon" type="image/svg+xml" href="../images/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+<link rel="stylesheet" href="../styles.css" />
+<link rel="stylesheet" href="../css/admin.css" />
+<link rel="stylesheet" href="../css/admin-responsive.css" />
+
+<script src="../js/theme.js"></script>
+
+<style>
+  .admin-breadcrumb { font-size:0.85rem; color:var(--text-muted); margin-bottom:8px; }
+  .admin-breadcrumb a { color:var(--text-muted); transition:color var(--transition-fast); }
+  .admin-breadcrumb a:hover { color:var(--color-primary); }
+  .admin-breadcrumb .sep { margin:0 6px; }
+  .admin-breadcrumb .current { color:var(--text-secondary); font-weight:600; }
+
+  /* ── Tabs ── */
+  .stg-tabs { display:flex; gap:4px; border-bottom:2px solid var(--border-color); margin-bottom:var(--space-md); flex-wrap:wrap; }
+  .stg-tab {
+    padding:12px 20px; font-size:0.9rem; font-weight:600; color:var(--text-muted);
+    border-bottom:2px solid transparent; margin-bottom:-2px;
+    transition:all var(--transition-fast); cursor:pointer; background:none; border-top:none; border-left:none; border-right:none;
+    display:flex; align-items:center; gap:8px;
+  }
+  .stg-tab:hover { color:var(--text-primary); }
+  .stg-tab.active { color:var(--color-primary); border-bottom-color:var(--color-primary); }
+
+  /* ── Tab panels ── */
+  .stg-panel { display:none; }
+  .stg-panel.active { display:block; }
+
+  /* ── Form layout ── */
+  .admin-form-group { margin-bottom:var(--space-sm); }
+  .admin-form-group label { display:block; font-weight:600; font-size:0.88rem; margin-bottom:6px; color:var(--text-secondary); }
+  .admin-form-group input[type=text],
+  .admin-form-group input[type=email],
+  .admin-form-group input[type=password],
+  .admin-form-group input[type=url],
+  .admin-form-group textarea,
+  .admin-form-group select {
+    width:100%; padding:12px 16px; border-radius:var(--radius-sm);
+    border:1.5px solid var(--border-color); background:var(--surface-alt);
+    color:var(--text-primary); font-size:0.92rem;
+  }
+  .admin-form-group input:focus,
+  .admin-form-group textarea:focus,
+  .admin-form-group select:focus { border-color:var(--color-primary); outline:none; }
+  .admin-form-group textarea { resize:vertical; }
+  .admin-form-group .hint { font-size:0.79rem; color:var(--text-muted); margin-top:5px; }
+  .admin-form-row-2 { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-sm); }
+
+  /* ── Color picker row ── */
+  .stg-color-row { display:flex; align-items:center; gap:12px; }
+  .stg-color-row input[type=color] {
+    width:48px; height:48px; border-radius:var(--radius-sm); cursor:pointer;
+    border:2px solid var(--border-color); padding:2px; background:none;
+  }
+  .stg-color-row input[type=text] { flex:1; }
+
+  /* ── Upload area ── */
+  .stg-upload-area {
+    display:flex; align-items:center; gap:var(--space-sm);
+    padding:var(--space-sm); border:2px dashed var(--border-color);
+    border-radius:var(--radius-md); cursor:pointer;
+    transition:border-color var(--transition-fast), background var(--transition-fast);
+  }
+  .stg-upload-area:hover { border-color:var(--color-primary); background:rgba(20,184,166,0.04); }
+  .stg-upload-icon { width:52px; height:52px; border-radius:var(--radius-sm); background:var(--surface-alt); display:flex; align-items:center; justify-content:center; font-size:1.4rem; color:var(--text-muted); flex-shrink:0; }
+  .stg-upload-text h5 { margin:0 0 3px; font-size:0.9rem; }
+  .stg-upload-text p  { margin:0; font-size:0.8rem; color:var(--text-muted); }
+  .stg-upload-area input[type=file] { display:none; }
+
+  /* ── Toggle switch ── */
+  .stg-toggle-row { display:flex; align-items:center; justify-content:space-between; padding:var(--space-sm) 0; border-bottom:1px solid var(--border-color); }
+  .stg-toggle-row:last-child { border-bottom:none; }
+  .stg-toggle-label h5 { margin:0 0 3px; font-size:0.92rem; font-weight:600; }
+  .stg-toggle-label p  { margin:0; font-size:0.82rem; color:var(--text-muted); }
+  .stg-toggle-switch { position:relative; display:inline-block; width:48px; height:26px; flex-shrink:0; }
+  .stg-toggle-switch input { opacity:0; width:0; height:0; }
+  .stg-toggle-slider {
+    position:absolute; inset:0; background:var(--border-color); border-radius:var(--radius-full);
+    cursor:pointer; transition:background var(--transition-fast);
+  }
+  .stg-toggle-slider::before {
+    content:''; position:absolute; width:20px; height:20px; left:3px; bottom:3px;
+    background:#fff; border-radius:50%; transition:transform var(--transition-fast);
+  }
+  .stg-toggle-switch input:checked + .stg-toggle-slider { background:var(--color-primary); }
+  .stg-toggle-switch input:checked + .stg-toggle-slider::before { transform:translateX(22px); }
+
+  /* ── Social media rows ── */
+  .stg-social-item { display:flex; align-items:center; gap:12px; margin-bottom:var(--space-sm); }
+  .stg-social-icon { width:42px; height:42px; border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
+  .stg-social-item input { flex:1; }
+
+  /* ── Section title inside panel ── */
+  .stg-section-title { font-family:'Sora',sans-serif; font-size:1rem; font-weight:700; margin:0 0 var(--space-sm); color:var(--text-primary); }
+  .stg-section-divider { border:none; border-top:1px solid var(--border-color); margin:var(--space-md) 0; }
+
+  /* ── Form actions ── */
+  .stg-form-actions { display:flex; gap:12px; justify-content:flex-end; padding-top:var(--space-sm); border-top:1px solid var(--border-color); margin-top:var(--space-md); }
+
+  /* ── Theme colour swatches ── */
+  .stg-swatches { display:flex; gap:10px; flex-wrap:wrap; }
+  .stg-swatch {
+    width:40px; height:40px; border-radius:50%; cursor:pointer;
+    border:3px solid transparent; transition:border-color var(--transition-fast), transform var(--transition-fast);
+  }
+  .stg-swatch:hover, .stg-swatch.selected { border-color:var(--text-primary); transform:scale(1.12); }
+
+  /* ── Password strength bar ── */
+  .stg-strength-bar { display:flex; gap:4px; margin-top:6px; }
+  .stg-strength-seg { flex:1; height:4px; border-radius:2px; background:var(--border-color); transition:background 0.3s; }
+  .stg-strength-label { font-size:0.78rem; color:var(--text-muted); margin-top:4px; }
+
+  /* Toast */
+  .stg-toast {
+    position:fixed; bottom:24px; right:24px; z-index:4000;
+    display:flex; align-items:center; gap:10px;
+    background:var(--surface); border:1px solid var(--border-color); box-shadow:var(--shadow-lg);
+    border-radius:var(--radius-md); padding:14px 18px; font-size:0.9rem; font-weight:500;
+    transform:translateX(140%); transition:transform var(--transition-fast);
+    max-width:min(320px, calc(100vw - 48px));
+  }
+  .stg-toast.show { transform:translateX(0); }
+  .stg-toast i { font-size:1.1rem; flex-shrink:0; }
+  .stg-toast.success i { color:#0d9488; }
+  .stg-toast.error i   { color:#dc2626; }
+
+  @media (max-width:700px) {
+    .admin-form-row-2 { grid-template-columns:1fr; }
+    .stg-tabs { gap:0; }
+    .stg-tab  { padding:10px 12px; font-size:0.82rem; }
+    .stg-toast { left:16px; right:16px; max-width:none; }
+    .stg-form-actions { flex-direction:column; }
+  }
+</style>
+</head>
+<body class="admin-body">
+<div class="admin-layout">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="admin-sidebar">
+    <a href="../index.html" class="admin-sidebar-brand">
+      <img src="../images/logo.svg" alt="LinguaVerse logo" />
+      <span>LinguaVerse</span>
+    </a>
+    <nav class="admin-sidebar-nav" aria-label="Admin navigation">
+      <a href="dashboard.html"><i class="fa-solid fa-gauge-high"></i> <span>Dashboard</span></a>
+      <a href="languages.html"><i class="fa-solid fa-language"></i> <span>Languages</span></a>
+      <a href="lessons.html"><i class="fa-solid fa-book-open"></i> <span>Lessons</span></a>
+      <a href="users.html"><i class="fa-solid fa-users"></i> <span>Users</span></a>
+      <a href="messages.html"><i class="fa-solid fa-envelope-open-text"></i> <span>Contact Messages</span></a>
+      <a href="pricing.html"><i class="fa-solid fa-tags"></i> <span>Pricing</span></a>
+      <a href="settings.html" class="active"><i class="fa-solid fa-gear"></i> <span>Settings</span></a>
+    </nav>
+    <div class="admin-sidebar-footer">
+      <button type="button" data-logout>
+        <i class="fa-solid fa-right-from-bracket"></i> <span>Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <div class="admin-sidebar-overlay"></div>
+
+  <!-- ===== MAIN ===== -->
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <button class="admin-sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <form class="admin-search" role="search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="search" placeholder="Search settings..." aria-label="Search" />
+      </form>
+      <div class="admin-topbar-actions">
+        <div class="admin-dropdown">
+          <button class="admin-icon-btn" data-dropdown-trigger aria-label="Notifications">
+            <i class="fa-regular fa-bell"></i>
+          </button>
+          <div class="admin-dropdown-menu">
+            <h4>Notifications</h4>
+            <div class="admin-notif-item">
+              <i class="fa-solid fa-circle-check"></i>
+              <div><div>Settings saved successfully</div><div class="admin-notif-time">Just now</div></div>
+            </div>
+          </div>
+        </div>
+        <button class="theme-toggle" aria-label="Toggle dark mode">
+          <i class="fa-solid fa-moon"></i>
+          <i class="fa-solid fa-sun"></i>
+        </button>
+        <div class="admin-dropdown">
+          <button class="admin-profile-btn" data-dropdown-trigger>
+            <span class="admin-profile-avatar" data-admin-initials>A</span>
+            <span data-admin-name>Admin</span>
+            <i class="fa-solid fa-chevron-down" style="font-size:0.7rem;"></i>
+          </button>
+          <div class="admin-dropdown-menu admin-profile-menu">
+            <a href="#"><i class="fa-solid fa-user"></i> My Profile</a>
+            <a href="settings.html"><i class="fa-solid fa-gear"></i> Account Settings</a>
+            <hr />
+            <button type="button" data-logout><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ===== PAGE CONTENT ===== -->
+    <main class="admin-content">
+
+      <div class="admin-page-title admin-fade-in">
+        <nav class="admin-breadcrumb">
+          <a href="dashboard.html">Dashboard</a>
+          <span class="sep">/</span>
+          <span class="current">Settings</span>
+        </nav>
+        <h1>Settings</h1>
+        <p style="color:var(--text-muted);font-size:0.92rem;">Configure website, appearance, social media and security settings.</p>
+      </div>
+
+      <div class="admin-panel admin-fade-in">
+
+        <!-- Tabs -->
+        <div class="stg-tabs" role="tablist">
+          <button type="button" class="stg-tab active" role="tab" data-stg-tab="general">
+            <i class="fa-solid fa-sliders"></i> General
+          </button>
+          <button type="button" class="stg-tab" role="tab" data-stg-tab="website">
+            <i class="fa-solid fa-globe"></i> Website
+          </button>
+          <button type="button" class="stg-tab" role="tab" data-stg-tab="appearance">
+            <i class="fa-solid fa-palette"></i> Appearance
+          </button>
+          <button type="button" class="stg-tab" role="tab" data-stg-tab="social">
+            <i class="fa-solid fa-share-nodes"></i> Social Media
+          </button>
+          <button type="button" class="stg-tab" role="tab" data-stg-tab="security">
+            <i class="fa-solid fa-shield-halved"></i> Security
+          </button>
+        </div>
+
+        <!-- ===== GENERAL TAB ===== -->
+        <div class="stg-panel active" id="stg-general">
+          <h4 class="stg-section-title">General Settings</h4>
+
+          <div class="admin-form-row-2">
+            <div class="admin-form-group">
+              <label for="stgSiteName">Website Name</label>
+              <input type="text" id="stgSiteName" value="LinguaVerse" />
+            </div>
+            <div class="admin-form-group">
+              <label for="stgAdminEmail">Admin Email</label>
+              <input type="email" id="stgAdminEmail" value="admin@linguaverse.com" />
+            </div>
+          </div>
+
+          <div class="admin-form-group">
+            <label>Logo Upload</label>
+            <label class="stg-upload-area" for="stgLogoFile">
+              <div class="stg-upload-icon"><i class="fa-solid fa-image"></i></div>
+              <div class="stg-upload-text">
+                <h5>Upload Logo</h5>
+                <p>SVG, PNG or JPG — recommended 200×60px</p>
+              </div>
+              <input type="file" id="stgLogoFile" accept="image/*" />
+            </label>
+          </div>
+
+          <div class="admin-form-group">
+            <label>Favicon Upload</label>
+            <label class="stg-upload-area" for="stgFaviconFile">
+              <div class="stg-upload-icon"><i class="fa-solid fa-star"></i></div>
+              <div class="stg-upload-text">
+                <h5>Upload Favicon</h5>
+                <p>ICO or PNG — recommended 32×32px</p>
+              </div>
+              <input type="file" id="stgFaviconFile" accept="image/*" />
+            </label>
+          </div>
+
+          <div class="admin-form-row-2">
+            <div class="admin-form-group">
+              <label>Primary Color</label>
+              <div class="stg-color-row">
+                <input type="color" id="stgPrimaryColor" value="#14b8a6" />
+                <input type="text"  id="stgPrimaryColorHex" value="#14b8a6" placeholder="#14b8a6" />
+              </div>
+            </div>
+            <div class="admin-form-group">
+              <label>Secondary Color</label>
+              <div class="stg-color-row">
+                <input type="color" id="stgSecondaryColor" value="#6366f1" />
+                <input type="text"  id="stgSecondaryColorHex" value="#6366f1" placeholder="#6366f1" />
+              </div>
+            </div>
+          </div>
+
+          <div class="admin-form-group">
+            <label for="stgFooterText">Footer Text</label>
+            <input type="text" id="stgFooterText" value="© 2026 LinguaVerse. All rights reserved." />
+          </div>
+
+          <div class="stg-form-actions">
+            <button type="button" class="btn btn-secondary" data-stg-reset="general"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+            <button type="button" class="btn btn-primary" data-stg-save><i class="fa-solid fa-floppy-disk"></i> Save Changes</button>
+          </div>
+        </div>
+
+        <!-- ===== WEBSITE TAB ===== -->
+        <div class="stg-panel" id="stg-website">
+          <h4 class="stg-section-title">Website Settings</h4>
+
+          <div class="admin-form-group">
+            <label for="stgTagline">Site Tagline</label>
+            <input type="text" id="stgTagline" value="Speak a new language. The human way." />
+          </div>
+
+          <div class="admin-form-row-2">
+            <div class="admin-form-group">
+              <label for="stgMetaTitle">SEO Meta Title</label>
+              <input type="text" id="stgMetaTitle" value="LinguaVerse — Language Learning Platform" />
+            </div>
+            <div class="admin-form-group">
+              <label for="stgMetaDesc">Meta Description</label>
+              <input type="text" id="stgMetaDesc" value="Learn languages the human way with LinguaVerse." />
+            </div>
+          </div>
+
+          <div class="admin-form-group">
+            <label for="stgSiteUrl">Website URL</label>
+            <input type="url" id="stgSiteUrl" value="https://linguaverse.com" />
+          </div>
+
+          <div class="admin-form-row-2">
+            <div class="admin-form-group">
+              <label for="stgContactEmail">Contact Email (Public)</label>
+              <input type="email" id="stgContactEmail" value="hello@linguaverse.com" />
+            </div>
+            <div class="admin-form-group">
+              <label for="stgSupportEmail">Support Email</label>
+              <input type="email" id="stgSupportEmail" value="support@linguaverse.com" />
+            </div>
+          </div>
+
+          <div class="admin-form-group">
+            <label for="stgMaintenanceMode">Maintenance Mode</label>
+            <select id="stgMaintenanceMode">
+              <option value="off">Off — Site is live</option>
+              <option value="on">On — Show maintenance page</option>
+            </select>
+            <p class="hint">When On, visitors see a maintenance page. Admins can still log in.</p>
+          </div>
+
+          <div class="stg-form-actions">
+            <button type="button" class="btn btn-secondary" data-stg-reset="website"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+            <button type="button" class="btn btn-primary" data-stg-save><i class="fa-solid fa-floppy-disk"></i> Save Changes</button>
+          </div>
+        </div>
+
+        <!-- ===== APPEARANCE TAB ===== -->
+        <div class="stg-panel" id="stg-appearance">
+          <h4 class="stg-section-title">Appearance</h4>
+
+          <!-- Dark mode toggle -->
+          <div class="stg-toggle-row">
+            <div class="stg-toggle-label">
+              <h5>Dark Mode (Default)</h5>
+              <p>Set the default theme for all visitors when they first land on the site.</p>
+            </div>
+            <label class="stg-toggle-switch" aria-label="Dark mode default">
+              <input type="checkbox" id="stgDarkDefault" />
+              <span class="stg-toggle-slider"></span>
+            </label>
+          </div>
+          <div class="stg-toggle-row">
+            <div class="stg-toggle-label">
+              <h5>Allow Theme Switching</h5>
+              <p>Show the light/dark toggle button to all visitors.</p>
+            </div>
+            <label class="stg-toggle-switch" aria-label="Allow theme switching">
+              <input type="checkbox" id="stgAllowThemeSwitch" checked />
+              <span class="stg-toggle-slider"></span>
+            </label>
+          </div>
+          <div class="stg-toggle-row">
+            <div class="stg-toggle-label">
+              <h5>Animated Backgrounds</h5>
+              <p>Enable subtle motion animations on the hero and other sections.</p>
+            </div>
+            <label class="stg-toggle-switch" aria-label="Animated backgrounds">
+              <input type="checkbox" id="stgAnimBg" checked />
+              <span class="stg-toggle-slider"></span>
+            </label>
+          </div>
+
+          <hr class="stg-section-divider" />
+          <h4 class="stg-section-title">Theme Colour Presets</h4>
+          <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:var(--space-sm);">Click a swatch to preview a preset colour scheme.</p>
+
+          <div class="stg-swatches" id="stgSwatches">
+            <button type="button" class="stg-swatch selected" style="background:#14b8a6;" data-color="#14b8a6" title="Teal (default)" aria-label="Teal"></button>
+            <button type="button" class="stg-swatch" style="background:#6366f1;" data-color="#6366f1" title="Indigo" aria-label="Indigo"></button>
+            <button type="button" class="stg-swatch" style="background:#f59e0b;" data-color="#f59e0b" title="Amber" aria-label="Amber"></button>
+            <button type="button" class="stg-swatch" style="background:#ec4899;" data-color="#ec4899" title="Pink" aria-label="Pink"></button>
+            <button type="button" class="stg-swatch" style="background:#ef4444;" data-color="#ef4444" title="Red" aria-label="Red"></button>
+            <button type="button" class="stg-swatch" style="background:#10b981;" data-color="#10b981" title="Emerald" aria-label="Emerald"></button>
+            <button type="button" class="stg-swatch" style="background:#0ea5e9;" data-color="#0ea5e9" title="Sky Blue" aria-label="Sky Blue"></button>
+            <button type="button" class="stg-swatch" style="background:#8b5cf6;" data-color="#8b5cf6" title="Violet" aria-label="Violet"></button>
+          </div>
+
+          <div class="stg-form-actions" style="margin-top:var(--space-md);">
+            <button type="button" class="btn btn-secondary" data-stg-reset="appearance"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+            <button type="button" class="btn btn-primary" data-stg-save><i class="fa-solid fa-floppy-disk"></i> Save Changes</button>
+          </div>
+        </div>
+
+        <!-- ===== SOCIAL MEDIA TAB ===== -->
+        <div class="stg-panel" id="stg-social">
+          <h4 class="stg-section-title">Social Media Links</h4>
+          <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:var(--space-md);">These links appear in the website footer and contact page.</p>
+
+          <div class="stg-social-item">
+            <div class="stg-social-icon" style="background:#1877F2;color:#fff;"><i class="fa-brands fa-facebook-f"></i></div>
+            <input type="url" placeholder="https://facebook.com/linguaverse" id="stgFacebook" />
+          </div>
+          <div class="stg-social-item">
+            <div class="stg-social-icon" style="background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fd5949 45%,#d6249f 60%,#285aeb 90%);color:#fff;"><i class="fa-brands fa-instagram"></i></div>
+            <input type="url" placeholder="https://instagram.com/linguaverse" id="stgInstagram" />
+          </div>
+          <div class="stg-social-item">
+            <div class="stg-social-icon" style="background:#0A66C2;color:#fff;"><i class="fa-brands fa-linkedin-in"></i></div>
+            <input type="url" placeholder="https://linkedin.com/company/linguaverse" id="stgLinkedIn" />
+          </div>
+          <div class="stg-social-item">
+            <div class="stg-social-icon" style="background:#FF0000;color:#fff;"><i class="fa-brands fa-youtube"></i></div>
+            <input type="url" placeholder="https://youtube.com/@linguaverse" id="stgYouTube" />
+          </div>
+          <div class="stg-social-item">
+            <div class="stg-social-icon" style="background:#24292e;color:#fff;"><i class="fa-brands fa-github"></i></div>
+            <input type="url" placeholder="https://github.com/linguaverse" id="stgGitHub" />
+          </div>
+          <div class="stg-social-item">
+            <div class="stg-social-icon" style="background:#000;color:#fff;"><i class="fa-brands fa-x-twitter"></i></div>
+            <input type="url" placeholder="https://x.com/linguaverse" id="stgTwitter" />
+          </div>
+
+          <div class="stg-form-actions">
+            <button type="button" class="btn btn-secondary" data-stg-reset="social"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+            <button type="button" class="btn btn-primary" data-stg-save><i class="fa-solid fa-floppy-disk"></i> Save Changes</button>
+          </div>
+        </div>
+
+        <!-- ===== SECURITY TAB ===== -->
+        <div class="stg-panel" id="stg-security">
+          <h4 class="stg-section-title">Change Password</h4>
+
+          <div class="admin-form-group">
+            <label for="stgCurrentPwd">Current Password</label>
+            <div class="admin-input-wrap">
+              <i class="fa-solid fa-lock admin-input-icon"></i>
+              <input type="password" id="stgCurrentPwd" placeholder="Enter current password" autocomplete="current-password" />
+              <button type="button" class="admin-toggle-password" data-pwd-target="stgCurrentPwd" aria-label="Show password"><i class="fa-solid fa-eye"></i></button>
+            </div>
+          </div>
+
+          <div class="admin-form-row-2">
+            <div class="admin-form-group">
+              <label for="stgNewPwd">New Password</label>
+              <div class="admin-input-wrap">
+                <i class="fa-solid fa-key admin-input-icon"></i>
+                <input type="password" id="stgNewPwd" placeholder="New password" autocomplete="new-password" />
+                <button type="button" class="admin-toggle-password" data-pwd-target="stgNewPwd" aria-label="Show password"><i class="fa-solid fa-eye"></i></button>
+              </div>
+              <div class="stg-strength-bar" id="stgStrengthBar">
+                <div class="stg-strength-seg" id="seg1"></div>
+                <div class="stg-strength-seg" id="seg2"></div>
+                <div class="stg-strength-seg" id="seg3"></div>
+                <div class="stg-strength-seg" id="seg4"></div>
+              </div>
+              <p class="stg-strength-label" id="stgStrengthLabel">Password strength</p>
+            </div>
+            <div class="admin-form-group">
+              <label for="stgConfirmPwd">Confirm New Password</label>
+              <div class="admin-input-wrap">
+                <i class="fa-solid fa-key admin-input-icon"></i>
+                <input type="password" id="stgConfirmPwd" placeholder="Repeat new password" autocomplete="new-password" />
+              </div>
+            </div>
+          </div>
+
+          <hr class="stg-section-divider" />
+          <h4 class="stg-section-title">Security Options</h4>
+
+          <div class="stg-toggle-row">
+            <div class="stg-toggle-label">
+              <h5>Two-Factor Authentication</h5>
+              <p>Require a verification code in addition to your password when logging in.</p>
+            </div>
+            <label class="stg-toggle-switch" aria-label="Two factor authentication">
+              <input type="checkbox" id="stg2FA" />
+              <span class="stg-toggle-slider"></span>
+            </label>
+          </div>
+          <div class="stg-toggle-row">
+            <div class="stg-toggle-label">
+              <h5>Login Activity Alerts</h5>
+              <p>Send an email alert whenever a new device logs in to the admin panel.</p>
+            </div>
+            <label class="stg-toggle-switch" aria-label="Login activity alerts">
+              <input type="checkbox" id="stgLoginAlerts" checked />
+              <span class="stg-toggle-slider"></span>
+            </label>
+          </div>
+          <div class="stg-toggle-row">
+            <div class="stg-toggle-label">
+              <h5>Auto Session Timeout</h5>
+              <p>Automatically log out after 30 minutes of inactivity.</p>
+            </div>
+            <label class="stg-toggle-switch" aria-label="Auto session timeout">
+              <input type="checkbox" id="stgSessionTimeout" checked />
+              <span class="stg-toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="stg-form-actions">
+            <button type="button" class="btn btn-secondary" data-stg-reset="security"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+            <button type="button" class="btn btn-primary" id="stgSavePwdBtn"><i class="fa-solid fa-shield-halved"></i> Update Password</button>
+          </div>
+        </div>
+
+      </div><!-- /.admin-panel -->
+
+    </main>
+  </div>
+</div>
+
+<script src="../js/admin.js"></script>
+<script src="../js/admin-settings.js"></script>
+</body>
+</html>
