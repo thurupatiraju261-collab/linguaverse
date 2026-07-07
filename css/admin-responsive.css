@@ -1,0 +1,75 @@
+/* ==========================================================================
+   LinguaVerse — admin-responsive.css
+   Responsive overrides for the admin login & dashboard pages.
+   ========================================================================== */
+
+/* ===================== LOGIN PAGE ===================== */
+
+/* Show the illustration panel on wide screens */
+@media (min-width: 960px) {
+  .admin-auth-illustration-panel {
+    display: flex;
+  }
+}
+
+/* ===================== DASHBOARD ===================== */
+
+/* Tablets & small desktops */
+@media (max-width: 1024px) {
+  .admin-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .admin-two-col {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  /* Sidebar hidden off-screen by default on mobile */
+  .admin-sidebar {
+    transform: translateX(-100%);
+  }
+  .admin-sidebar.is-open {
+    transform: translateX(0);
+  }
+  .admin-sidebar-overlay.is-open {
+    display: block;
+  }
+
+  .admin-main {
+    margin-left: 0;
+  }
+
+  .admin-sidebar-toggle {
+    display: flex;
+  }
+
+  .admin-stats-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .admin-content {
+    padding: 1rem;
+  }
+
+  .admin-welcome-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+    padding: 1.25rem;
+  }
+
+  .admin-profile-btn span:not(.admin-profile-avatar) {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-stats-grid {
+    grid-template-columns: 1fr;
+  }
+  .admin-quick-actions {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dashboard — LinguaVerse Admin</title>
+<meta name="description" content="LinguaVerse admin dashboard overview." />
+<meta name="robots" content="noindex, nofollow" />
+
+<link rel="icon" type="image/svg+xml" href="../images/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+<link rel="stylesheet" href="../styles.css" />
+<link rel="stylesheet" href="../css/admin.css" />
+<link rel="stylesheet" href="../css/admin-responsive.css" />
+
+<script src="../js/theme.js"></script>
+</head>
+<body class="admin-body">
+
+<div class="admin-layout">
+
+  <!-- ===================== SIDEBAR ===================== -->
+  <aside class="admin-sidebar">
+    <a href="../index.html" class="admin-sidebar-brand">
+      <img src="../images/logo.svg" alt="LinguaVerse logo" />
+      <span>LinguaVerse</span>
+    </a>
+
+    <nav class="admin-sidebar-nav" aria-label="Admin navigation">
+      <a href="dashboard.html" class="active"><i class="fa-solid fa-gauge-high"></i> <span>Dashboard</span></a>
+      <a href="#"><i class="fa-solid fa-language"></i> <span>Languages</span></a>
+      <a href="#"><i class="fa-solid fa-book-open"></i> <span>Lessons</span></a>
+      <a href="#"><i class="fa-solid fa-users"></i> <span>Users</span></a>
+      <a href="#"><i class="fa-solid fa-envelope-open-text"></i> <span>Contact Messages</span></a>
+      <a href="#"><i class="fa-solid fa-tags"></i> <span>Pricing</span></a>
+      <a href="#"><i class="fa-solid fa-gear"></i> <span>Settings</span></a>
+    </nav>
+
+    <div class="admin-sidebar-footer">
+      <button type="button" data-logout>
+        <i class="fa-solid fa-right-from-bracket"></i> <span>Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <div class="admin-sidebar-overlay"></div>
+
+  <!-- ===================== MAIN COLUMN ===================== -->
+  <div class="admin-main">
+
+    <!-- Topbar -->
+    <header class="admin-topbar">
+      <button class="admin-sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+      <form class="admin-search" id="adminSearchForm" role="search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="search" placeholder="Search languages, lessons, users..." aria-label="Search" />
+      </form>
+
+      <div class="admin-topbar-actions">
+        <div class="admin-dropdown">
+          <button class="admin-icon-btn" data-dropdown-trigger aria-label="Notifications">
+            <i class="fa-regular fa-bell"></i>
+            <span class="admin-badge-dot"></span>
+          </button>
+          <div class="admin-dropdown-menu">
+            <h4>Notifications</h4>
+            <div class="admin-notif-item">
+              <i class="fa-solid fa-envelope"></i>
+              <div>
+                <div>New contact message from Priya S.</div>
+                <div class="admin-notif-time">10 minutes ago</div>
+              </div>
+            </div>
+            <div class="admin-notif-item">
+              <i class="fa-solid fa-user-plus"></i>
+              <div>
+                <div>12 new learners joined today</div>
+                <div class="admin-notif-time">2 hours ago</div>
+              </div>
+            </div>
+            <div class="admin-notif-item">
+              <i class="fa-solid fa-circle-check"></i>
+              <div>
+                <div>Japanese course update published</div>
+                <div class="admin-notif-time">Yesterday</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="theme-toggle" aria-label="Toggle dark mode">
+          <i class="fa-solid fa-moon"></i>
+          <i class="fa-solid fa-sun"></i>
+        </button>
+
+        <div class="admin-dropdown">
+          <button class="admin-profile-btn" data-dropdown-trigger>
+            <span class="admin-profile-avatar" data-admin-initials>A</span>
+            <span data-admin-name>Admin</span>
+            <i class="fa-solid fa-chevron-down" style="font-size:0.7rem;"></i>
+          </button>
+          <div class="admin-dropdown-menu admin-profile-menu">
+            <a href="#"><i class="fa-solid fa-user"></i> My Profile</a>
+            <a href="#"><i class="fa-solid fa-gear"></i> Account Settings</a>
+            <hr />
+            <button type="button" data-logout><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Dashboard content -->
+    <main class="admin-content">
+
+      <!-- Welcome card -->
+      <div class="admin-welcome-card admin-fade-in">
+        <div>
+          <h2>Welcome back, <span data-admin-name>Admin</span> 👋</h2>
+          <p>Here's what's happening across LinguaVerse today.</p>
+          <p class="admin-welcome-date" data-today-date></p>
+        </div>
+        <i class="fa-solid fa-graduation-cap" style="font-size:3rem;opacity:0.35;"></i>
+      </div>
+
+      <!-- Stat cards -->
+      <div class="grid admin-stats-grid">
+        <div class="admin-stat-card admin-fade-in">
+          <div class="admin-stat-icon"><i class="fa-solid fa-language"></i></div>
+          <div>
+            <div class="admin-stat-number" data-stat-counter="6">0</div>
+            <div class="admin-stat-label">Total Languages</div>
+          </div>
+        </div>
+        <div class="admin-stat-card admin-fade-in">
+          <div class="admin-stat-icon"><i class="fa-solid fa-book"></i></div>
+          <div>
+            <div class="admin-stat-number" data-stat-counter="120">0</div>
+            <div class="admin-stat-label">Total Lessons</div>
+          </div>
+        </div>
+        <div class="admin-stat-card admin-fade-in">
+          <div class="admin-stat-icon"><i class="fa-solid fa-users"></i></div>
+          <div>
+            <div class="admin-stat-number" data-stat-counter="350">0</div>
+            <div class="admin-stat-label">Total Users</div>
+          </div>
+        </div>
+        <div class="admin-stat-card admin-fade-in">
+          <div class="admin-stat-icon"><i class="fa-solid fa-envelope"></i></div>
+          <div>
+            <div class="admin-stat-number" data-stat-counter="15">0</div>
+            <div class="admin-stat-label">Contact Messages</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Analytics chart + Quick actions -->
+      <div class="grid admin-two-col">
+        <div class="admin-panel admin-fade-in">
+          <div class="admin-panel-header">
+            <h3>Learner Growth (last 6 months)</h3>
+            <span class="badge"><i class="fa-solid fa-chart-line"></i> +18% this month</span>
+          </div>
+          <div class="admin-chart">
+            <div class="admin-chart-bar" data-value="45"><span class="admin-chart-value">140</span></div>
+            <div class="admin-chart-bar" data-value="58"><span class="admin-chart-value">180</span></div>
+            <div class="admin-chart-bar" data-value="52"><span class="admin-chart-value">165</span></div>
+            <div class="admin-chart-bar" data-value="70"><span class="admin-chart-value">220</span></div>
+            <div class="admin-chart-bar" data-value="86"><span class="admin-chart-value">270</span></div>
+            <div class="admin-chart-bar" data-value="100"><span class="admin-chart-value">350</span></div>
+          </div>
+          <div class="admin-chart-labels">
+            <span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span>
+          </div>
+        </div>
+
+        <div class="admin-panel admin-fade-in">
+          <div class="admin-panel-header">
+            <h3>Quick Actions</h3>
+          </div>
+          <div class="grid admin-quick-actions">
+            <button class="admin-quick-action-btn" data-quick-action="Opening the Add Language form...">
+              <i class="fa-solid fa-plus"></i>
+              <span>Add Language</span>
+            </button>
+            <button class="admin-quick-action-btn" data-quick-action="Opening the Add Lesson form...">
+              <i class="fa-solid fa-file-circle-plus"></i>
+              <span>Add Lesson</span>
+            </button>
+            <button class="admin-quick-action-btn" data-quick-action="Loading contact messages...">
+              <i class="fa-solid fa-envelope-open"></i>
+              <span>View Messages</span>
+            </button>
+            <button class="admin-quick-action-btn" data-quick-action="Opening pricing management...">
+              <i class="fa-solid fa-tags"></i>
+              <span>Manage Pricing</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent activity + System status -->
+      <div class="grid admin-two-col">
+        <div class="admin-panel admin-fade-in">
+          <div class="admin-panel-header">
+            <h3>Recent Activity</h3>
+          </div>
+          <ul class="admin-activity-list">
+            <li>
+              <div class="admin-activity-icon"><i class="fa-solid fa-envelope"></i></div>
+              <div>
+                <div class="admin-activity-text">Priya S. sent a new contact message</div>
+                <div class="admin-activity-time">10 minutes ago</div>
+              </div>
+            </li>
+            <li>
+              <div class="admin-activity-icon"><i class="fa-solid fa-user-plus"></i></div>
+              <div>
+                <div class="admin-activity-text">12 new learners signed up</div>
+                <div class="admin-activity-time">2 hours ago</div>
+              </div>
+            </li>
+            <li>
+              <div class="admin-activity-icon"><i class="fa-solid fa-book-open"></i></div>
+              <div>
+                <div class="admin-activity-text">New lesson published in Japanese</div>
+                <div class="admin-activity-time">Yesterday, 4:12 PM</div>
+              </div>
+            </li>
+            <li>
+              <div class="admin-activity-icon"><i class="fa-solid fa-tags"></i></div>
+              <div>
+                <div class="admin-activity-text">Pro plan pricing updated</div>
+                <div class="admin-activity-time">2 days ago</div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="admin-panel admin-fade-in">
+          <div class="admin-panel-header">
+            <h3>System Status</h3>
+          </div>
+          <div class="admin-status-row"><span><span class="admin-status-dot"></span>Website</span> <span>Operational</span></div>
+          <div class="admin-status-row"><span><span class="admin-status-dot"></span>Database</span> <span>Operational</span></div>
+          <div class="admin-status-row"><span><span class="admin-status-dot"></span>Authentication</span> <span>Operational</span></div>
+          <div class="admin-status-row"><span><span class="admin-status-dot" style="background:var(--color-accent);box-shadow:0 0 0 4px rgba(245,158,11,0.15);"></span>Email Delivery</span> <span>Degraded</span></div>
+        </div>
+      </div>
+
+      <!-- Recent messages table -->
+      <div class="admin-panel admin-fade-in">
+        <div class="admin-panel-header">
+          <h3>Recent Messages</h3>
+          <span class="badge"><i class="fa-solid fa-envelope"></i> 15 total</span>
+        </div>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Sender</th>
+                <th>Subject</th>
+                <th>Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="admin-table-user">
+                    <span class="admin-table-avatar">PS</span> Priya Sharma
+                  </div>
+                </td>
+                <td>Question about Pro plan</td>
+                <td>Jul 7, 2026</td>
+                <td><span class="admin-status-pill new">New</span></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="admin-table-user">
+                    <span class="admin-table-avatar">RK</span> Rahul Kumar
+                  </div>
+                </td>
+                <td>Can't access Japanese lessons</td>
+                <td>Jul 6, 2026</td>
+                <td><span class="admin-status-pill new">New</span></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="admin-table-user">
+                    <span class="admin-table-avatar">MG</span> Maria Garcia
+                  </div>
+                </td>
+                <td>Partnership inquiry</td>
+                <td>Jul 5, 2026</td>
+                <td><span class="admin-status-pill read">Read</span></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="admin-table-user">
+                    <span class="admin-table-avatar">AT</span> Arjun Telugu
+                  </div>
+                </td>
+                <td>Feedback on Telugu course</td>
+                <td>Jul 4, 2026</td>
+                <td><span class="admin-status-pill read">Read</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script src="../js/admin.js"></script>
+</body>
+</html>
